@@ -7,17 +7,24 @@
     <link rel="icon" type="image/jpeg" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="32x32">
     <link rel="apple-touch-icon" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="180x180">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: #1a1a1a;
             color: #e0e0e0;
             line-height: 1.6;
+            overflow-x: hidden;
         }
 
         .view {
@@ -28,50 +35,67 @@
             display: block;
         }
 
+
+        /* Nav */
         nav {
-            background: #1a1a1a;
-            padding: 1.5rem 2rem;
+            background: rgba(26, 26, 26, 0.8);
+            padding: 0.8rem 1.5rem;
             position: fixed;
             width: 100%;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             border-bottom: 1px solid #333;
         }
 
         nav .container {
-            max-width: 1200px;
-            margin: 0 auto;
+            max-width: 100%;
+            margin: 0;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         nav .logo {
-            font-size: 1.5rem;
-            font-weight: bold;
+            font-size: 1.4rem;
+            font-weight: 700;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.6rem;
             cursor: pointer;
+            letter-spacing: -0.02em;
+        }
+
+        nav .logo img {
+            transition: transform 0.3s ease;
+        }
+
+        nav .logo:hover img {
+            transform: scale(1.1);
         }
 
         nav a {
-            color: #e0e0e0;
+            color: rgba(255, 255, 255, 0.6);
             text-decoration: none;
             margin-left: 2rem;
             transition: color 0.3s;
             cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         nav a:hover {
             color: #fff;
         }
 
+        /* Hero */
         .hero {
-            padding: 150px 2rem 100px;
+            padding: 160px 2rem 120px;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .hero .container {
@@ -80,28 +104,57 @@
         }
 
         .app-icon {
-            width: 150px;
-            height: 150px;
-            border-radius: 30px;
-            margin: 0 auto 2rem;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            width: 140px;
+            height: 140px;
+            border-radius: 32px;
+            margin: 0 auto 2.5rem;
             background-image: url('https://i.imgur.com/uHtxqKf.jpeg');
             background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
         }
 
+        .app-icon.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+
         h1 {
-            font-size: 3.5rem;
+            font-size: 4rem;
             margin-bottom: 1rem;
+            font-weight: 800;
+            letter-spacing: -0.03em;
             color: #fff;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
+        }
+
+        h1.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .tagline {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             color: #b0b0b0;
             margin-bottom: 3rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
+        }
+
+        .tagline.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .download-buttons {
@@ -110,6 +163,14 @@
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease 0.45s, transform 0.8s ease 0.45s;
+        }
+
+        .download-buttons.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .btn {
@@ -120,30 +181,48 @@
             background: #fff;
             color: #1a1a1a;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 14px;
             font-weight: 600;
             transition: transform 0.3s, box-shadow 0.3s;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
         }
 
         .btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 30px rgba(0, 0, 0, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .btn.store-btn {
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            padding: 0.8rem 1.6rem;
+            gap: 0.7rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .btn.store-btn:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
         }
 
         .btn-secondary {
-            background: #404040;
-            color: #b0b0b0;
             cursor: not-allowed;
         }
 
         .btn-secondary:hover {
             transform: none;
+            box-shadow: none;
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.12);
         }
 
+        /* Features */
         .features {
-            padding: 100px 2rem;
-            background: #1a1a1a;
+            padding: 120px 2rem;
+            position: relative;
+            z-index: 1;
         }
 
         .features .container {
@@ -153,86 +232,162 @@
 
         .features h2 {
             text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 4rem;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
             color: #fff;
+            font-weight: 800;
+            letter-spacing: -0.03em;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 0.8s ease, transform 0.8s ease;
+        }
+
+        .features h2.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .features-subtitle {
+            text-align: center;
+            color: #b0b0b0;
+            font-size: 1.1rem;
+            margin-bottom: 4rem;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
+        }
+
+        .features-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .features-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
         }
 
         .feature-card {
             background: #2d2d2d;
-            padding: 2rem;
-            border-radius: 16px;
+            padding: 2.2rem;
+            border-radius: 20px;
             border: 1px solid #404040;
-            transition: transform 0.3s, border-color 0.3s;
+            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .feature-card.visible {
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .feature-card:hover {
-            transform: translateY(-5px);
+            transform: translateY(-6px);
             border-color: #606060;
+            background: #353535;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        .feature-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.4rem;
+            margin-bottom: 1.2rem;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid #404040;
         }
 
         .feature-card h3 {
-            font-size: 1.3rem;
+            font-size: 1.2rem;
             margin-bottom: 0.5rem;
             color: #fff;
+            font-weight: 700;
         }
 
         .feature-card p {
             color: #b0b0b0;
+            font-size: 0.95rem;
+            line-height: 1.6;
         }
 
+        /* Contact */
         .contact {
-            padding: 100px 2rem;
+            padding: 120px 2rem;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .contact .container {
-            max-width: 800px;
+            max-width: 700px;
             margin: 0 auto;
         }
 
         .contact h2 {
-            font-size: 2.5rem;
-            margin-bottom: 1.5rem;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
             color: #fff;
+            font-weight: 800;
+            letter-spacing: -0.03em;
         }
 
         .contact p {
-            font-size: 1.2rem;
+            font-size: 1.15rem;
             color: #b0b0b0;
-            margin-bottom: 2rem;
+            margin-bottom: 2.5rem;
         }
 
-        .contact a {
+        .contact a.contact-link {
             color: #fff;
             text-decoration: none;
-            font-size: 1.3rem;
-            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 500;
+            padding: 1rem 2.5rem;
             background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
+            border: 1px solid #404040;
+            border-radius: 14px;
             display: inline-block;
-            transition: background 0.3s;
+            transition: all 0.3s ease;
         }
 
-        .contact a:hover {
+        .contact a.contact-link:hover {
             background: rgba(255, 255, 255, 0.15);
+            border-color: #606060;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
+        /* Divider */
+        .section-divider {
+            width: 100%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #333, transparent);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Privacy / Content pages */
         .content {
             max-width: 900px;
             margin: 0 auto;
             padding: 150px 2rem 100px;
+            position: relative;
+            z-index: 1;
         }
 
         .content h1 {
-            font-size: 2.5rem;
+            font-size: 2.8rem;
             margin-bottom: 1rem;
+            color: #fff;
+            font-weight: 800;
+            letter-spacing: -0.03em;
             color: #fff;
         }
 
@@ -243,22 +398,23 @@
         }
 
         .content h2 {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             margin-top: 2.5rem;
             margin-bottom: 1rem;
             color: #fff;
+            font-weight: 700;
         }
 
         .content p {
             margin-bottom: 1.5rem;
             color: #b0b0b0;
-            font-size: 1.1rem;
+            font-size: 1.05rem;
         }
 
         .contact-box {
             background: #2d2d2d;
             padding: 2rem;
-            border-radius: 12px;
+            border-radius: 16px;
             margin-top: 3rem;
             border: 1px solid #404040;
         }
@@ -270,21 +426,27 @@
         .contact-box a {
             color: #fff;
             text-decoration: none;
+            transition: color 0.3s;
         }
 
         .contact-box a:hover {
             text-decoration: underline;
+            color: #fff;
         }
 
+        /* Footer */
         footer {
             background: #1a1a1a;
-            padding: 2rem;
+            padding: 2.5rem 2rem;
             text-align: center;
             border-top: 1px solid #333;
+            position: relative;
+            z-index: 1;
         }
 
         footer p {
             color: #808080;
+            font-size: 0.9rem;
         }
 
         footer a {
@@ -292,28 +454,31 @@
             text-decoration: none;
             margin: 0 1rem;
             cursor: pointer;
+            font-size: 0.9rem;
+            transition: color 0.3s;
         }
 
         footer a:hover {
             color: #fff;
         }
 
+        /* Responsive */
         @media (max-width: 768px) {
             h1 {
-                font-size: 2.5rem;
+                font-size: 2.8rem;
             }
 
             .tagline {
-                font-size: 1.2rem;
+                font-size: 1.1rem;
             }
 
             nav {
-                padding: 1rem;
+                padding: 0.8rem 1rem;
             }
 
             nav .container {
                 flex-direction: column;
-                gap: 1rem;
+                gap: 0.8rem;
             }
 
             nav .logo {
@@ -321,8 +486,16 @@
             }
 
             nav a {
-                margin-left: 0.5rem;
-                font-size: 0.9rem;
+                margin-left: 0.8rem;
+                font-size: 0.85rem;
+            }
+
+            .features h2, .contact h2 {
+                font-size: 2.2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
             }
 
             .content h1 {
@@ -330,17 +503,18 @@
             }
 
             .content h2 {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
         }
     </style>
 </head>
 <body>
+
     <div id="homeView" class="view active">
         <nav>
             <div class="container">
                 <div class="logo" onclick="showView('home')">
-                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 6px;">
+                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 8px;">
                     Lenix
                 </div>
                 <div>
@@ -353,47 +527,69 @@
 
         <section class="hero">
             <div class="container">
-                <div class="app-icon"></div>
-                <h1>Lenix</h1>
-                <p class="tagline">Watch Twitch and YouTube without ad interruptions</p>
-                <div class="download-buttons">
-                    <a href="https://apps.apple.com/us/app/lenix/id6753905127" class="btn">
-                        <span>📱</span>
-                        Download for iOS
+                <div class="app-icon animate-on-scroll"></div>
+                <h1 class="animate-on-scroll">Lenix</h1>
+                <p class="tagline animate-on-scroll">Watch Twitch and YouTube without ad interruptions</p>
+                <div class="download-buttons animate-on-scroll">
+                    <a href="https://apps.apple.com/us/app/lenix/id6753905127" class="btn store-btn">
+                        <svg width="20" height="24" viewBox="0 0 814 1000" fill="#fff">
+                            <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.6-105.3-208.4-105.3-328.6 0-193 125.4-295.5 248.9-295.5 65.6 0 120.3 43.1 161.4 43.1 39.2 0 100.2-45.7 174.5-45.7 28.2 0 129.5 2.6 196.1 95.1zM554.1 159.4c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.9 32.4-54.4 83.6-54.4 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 103.1-30.4 134.8-71.3z"/>
+                        </svg>
+                        <div style="text-align: left; line-height: 1.2;">
+                            <div style="font-size: 0.65rem; font-weight: 400;">Download on the</div>
+                            <div style="font-size: 1.1rem; font-weight: 600;">App Store</div>
+                        </div>
                     </a>
-                    <span class="btn btn-secondary">
-                        <span>🤖</span>
-                        Android Coming Soon
+                    <span class="btn btn-secondary store-btn" style="position: relative; overflow: hidden; opacity: 0.5;">
+                        <svg width="20" height="22" viewBox="0 0 505 584" fill="none">
+                            <path d="M4.63 13.2C1.6 19.3 0 27.3 0 37v510c0 9.7 1.6 17.7 4.63 23.8L268 292 4.63 13.2z" fill="#4285F4"/>
+                            <path d="M353 208L268 292l85 84 96-53.4c10.8-6 18.2-13 22-20.6 3.8-7.6 3.8-16.4 0-24-3.8-7.6-11.2-14.6-22-20.6L353 208z" fill="#FBBC04"/>
+                            <path d="M268 292L4.63 570.8C8.3 578 14.5 583 23 583c5.2 0 11-1.6 17.4-5.2L353 376 268 292z" fill="#34A853"/>
+                            <path d="M268 292L353 208 40.4 6.2C34 2.6 28.2 1 23 1 14.5 1 8.3 6 4.63 13.2L268 292z" fill="#EA4335"/>
+                        </svg>
+                        <div style="text-align: left; line-height: 1.2;">
+                            <div style="font-size: 0.65rem; font-weight: 400;">Coming Soon</div>
+                            <div style="font-size: 1.1rem; font-weight: 600;">Google Play</div>
+                        </div>
                     </span>
                 </div>
             </div>
         </section>
 
+        <div class="section-divider"></div>
+
         <section id="features" class="features">
             <div class="container">
-                <h2>Features</h2>
+                <h2 class="animate-on-scroll">Features</h2>
+                <p class="features-subtitle animate-on-scroll">Everything you need for uninterrupted streaming</p>
                 <div class="features-grid">
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x1F6AB;</div>
                         <h3>Block Ads</h3>
                         <p>No more interruptions on Twitch and YouTube</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x2728;</div>
                         <h3>Native Experience</h3>
                         <p>Feels like using the actual app with great UI</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x1F5BC;</div>
                         <h3>Picture-in-Picture</h3>
                         <p>Watch while using other apps</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x1F3B5;</div>
                         <h3>Background Play</h3>
                         <p>Keep streaming even when the app is closed</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x1F31F;</div>
                         <h3>Dark Mode</h3>
                         <p>Easy on the eyes for extended viewing</p>
                     </div>
-                    <div class="feature-card">
+                    <div class="feature-card animate-on-scroll">
+                        <div class="feature-icon">&#x1F4AC;</div>
                         <h3>Twitch Chat</h3>
                         <p>Full chat integration for live streams</p>
                     </div>
@@ -401,11 +597,13 @@
             </div>
         </section>
 
+        <div class="section-divider"></div>
+
         <section id="contact" class="contact">
             <div class="container">
                 <h2>Contact</h2>
                 <p>Questions or feedback? Get in touch</p>
-                <a href="mailto:contact@lenixapp.com">contact@lenixapp.com</a>
+                <a class="contact-link" href="mailto:Lenixhelp@gmail.com">Lenixhelp@gmail.com</a>
             </div>
         </section>
 
@@ -421,7 +619,7 @@
         <nav>
             <div class="container">
                 <div class="logo" onclick="showView('home')">
-                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 6px;">
+                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 8px;">
                     Lenix
                 </div>
                 <div>
@@ -454,7 +652,7 @@
             <div class="contact-box">
                 <h2>Contact Us</h2>
                 <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-                <p><a href="mailto:contact@lenixapp.com">contact@lenixapp.com</a></p>
+                <p><a href="mailto:Lenixhelp@gmail.com">Lenixhelp@gmail.com</a></p>
             </div>
         </div>
 
@@ -465,11 +663,9 @@
 
     <script>
         function showView(view) {
-            // Hide all views
             document.getElementById('homeView').classList.remove('active');
             document.getElementById('privacyView').classList.remove('active');
-            
-            // Show selected view and update URL
+
             if (view === 'home') {
                 document.getElementById('homeView').classList.add('active');
                 window.history.pushState({view: 'home'}, '', '/');
@@ -479,9 +675,11 @@
                 window.history.pushState({view: 'privacy'}, '', '/privacypolicy');
                 window.scrollTo(0, 0);
             }
+
+            // Re-trigger animations
+            setTimeout(initAnimations, 100);
         }
 
-        // Handle browser back/forward buttons
         window.addEventListener('popstate', function(event) {
             if (event.state && event.state.view) {
                 showView(event.state.view);
@@ -490,12 +688,41 @@
             }
         });
 
-        // Check URL on page load
         window.addEventListener('load', function() {
             if (window.location.pathname === '/privacypolicy') {
                 showView('privacy');
             }
         });
+
+        // Scroll-triggered animations
+        function initAnimations() {
+            const observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry, index) {
+                    if (entry.isIntersecting) {
+                        // Stagger cards
+                        const parent = entry.target.parentElement;
+                        if (parent && parent.classList.contains('features-grid')) {
+                            const siblings = Array.from(parent.querySelectorAll('.feature-card'));
+                            const i = siblings.indexOf(entry.target);
+                            setTimeout(function() {
+                                entry.target.classList.add('visible');
+                            }, i * 100);
+                        } else {
+                            entry.target.classList.add('visible');
+                        }
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
+                if (!el.classList.contains('visible')) {
+                    observer.observe(el);
+                }
+            });
+        }
+
+        initAnimations();
     </script>
 </body>
 </html>
