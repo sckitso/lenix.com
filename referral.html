@@ -7,7 +7,7 @@
 <meta name="description" content="Your friend invited you to try Lenix.">
 <meta name="apple-itunes-app" content="app-id=6753905127">
 <meta property="og:title" content="You're invited to Lenix">
-<meta property="og:description" content="Your friend invited you to try Lenix. Tap to install — they'll get credit automatically.">
+<meta property="og:description" content="Tap to install — and your invite gets credit automatically.">
 <meta property="og:url" content="https://lenixapp.com/referral">
 <link rel="canonical" href="https://lenixapp.com/referral">
 <link rel="icon" type="image/jpeg" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="32x32">
@@ -63,12 +63,6 @@
 
   h1 + .cta { margin-top: 2rem; }
 
-  .ref {
-    display: none;
-    margin-bottom: 2rem;
-    word-break: break-all;
-  }
-
   .cta {
     display: block;
     width: 100%;
@@ -91,9 +85,7 @@
     box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
   }
 
-  .cta:active {
-    transform: translateY(0);
-  }
+  .cta:active { transform: translateY(0); }
 
   .cta[disabled] {
     background: #34c759;
@@ -109,17 +101,45 @@
     min-height: 1.2em;
   }
 
-  .footer {
+  /* Debug panel — visible after we send fingerprint to Firebase */
+  .debug {
     margin-top: 1.5rem;
-    font-size: 0.8rem;
-    color: #666;
+    background: rgba(0,0,0,0.25);
+    border: 1px solid #404040;
+    border-radius: 12px;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    font-size: 0.78rem;
+    display: none;
+  }
+  .debug.show { display: block; }
+  .debug-title {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: #888;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+  }
+  .debug-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 0.5rem;
+    padding: 0.2rem 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.06);
+  }
+  .debug-row:last-child { border-bottom: none; }
+  .debug-key { color: #888; }
+  .debug-val {
+    color: #fff;
+    font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    text-align: right;
+    word-break: break-all;
+    max-width: 60%;
   }
 
-  .footer a {
-    color: #b0b0b0;
-    text-decoration: none;
-  }
-
+  .footer { margin-top: 1.5rem; font-size: 0.8rem; color: #666; }
+  .footer a { color: #b0b0b0; text-decoration: none; }
   .footer a:hover { color: #fff; }
 </style>
 </head>
@@ -131,46 +151,113 @@
   <button class="cta" id="cta">Get Lenix</button>
   <p class="status" id="status">&nbsp;</p>
 
+  <div class="debug" id="debug">
+    <div class="debug-title">Sent to Firebase /clicks</div>
+    <div id="debugRows"></div>
+  </div>
+
   <p class="footer"><a href="https://lenixapp.com/">lenixapp.com</a></p>
 </main>
 
-<script>
-  const APP_STORE_URL = "https://apps.apple.com/us/app/lenix/id6753905127";
-  const PREFIX = "lenixref:";
+<script type="module">
+  import { initializeApp }
+    from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
+  import { getDatabase, ref, push, set }
+    from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
-  // Accept either /referral/USER_X (clean Netlify path)
-  // or /referral.html?ref=USER_X (legacy query-string form).
+  const firebaseConfig = {
+    apiKey: "AIzaSyCAz-_xs6DNg1oRtHceQM8P7dVrJ2JcFQk",
+    authDomain: "lenix-search.firebaseapp.com",
+    databaseURL: "https://lenix-search-default-rtdb.firebaseio.com",
+    projectId: "lenix-search",
+    storageBucket: "lenix-search.firebasestorage.app",
+    messagingSenderId: "463731369383",
+    appId: "1:463731369383:ios:93f76ab4e2e697f1644282"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getDatabase(app);
+
+  const APP_STORE_URL = "https://apps.apple.com/us/app/lenix/id6753905127";
+
+  // Read referrer ID from /referral/USER_X or ?ref=USER_X
   const params = new URLSearchParams(location.search);
-  let ref = (params.get("ref") || "").trim();
-  if (!ref) {
+  let referrerID = (params.get("ref") || "").trim();
+  if (!referrerID) {
     const m = location.pathname.match(/^\/referral\/([^/]+)\/?$/);
-    if (m) ref = decodeURIComponent(m[1]).trim();
+    if (m) referrerID = decodeURIComponent(m[1]).trim();
   }
 
   const cta = document.getElementById("cta");
   const status = document.getElementById("status");
+  const debugEl = document.getElementById("debug");
+  const debugRows = document.getElementById("debugRows");
+
+  async function fetchIP() {
+    try {
+      const r = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
+      const j = await r.json();
+      return j.ip || null;
+    } catch (e) { return null; }
+  }
+
+  function parseIOS(ua) {
+    const m = ua.match(/OS (\d+[_\.]\d+(?:[_\.]\d+)?)/);
+    return m ? m[1].replace(/_/g, ".") : "";
+  }
+
+  function buildFingerprint(ip) {
+    return {
+      referrer: referrerID || "(none)",
+      ip: ip || "(unknown)",
+      screenW: window.screen.width,
+      screenH: window.screen.height,
+      pixelRatio: window.devicePixelRatio || 1,
+      lang: navigator.language || "",
+      tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+      iosVersion: parseIOS(navigator.userAgent),
+      userAgent: navigator.userAgent,
+      platform: navigator.platform || "",
+      timestamp: Date.now(),
+      source: "web"
+    };
+  }
+
+  function renderDebug(fp) {
+    const order = ["referrer", "ip", "screenW", "screenH", "pixelRatio",
+                   "lang", "tz", "iosVersion", "platform", "timestamp"];
+    debugRows.innerHTML = order.map(k => `
+      <div class="debug-row">
+        <span class="debug-key">${k}</span>
+        <span class="debug-val">${escapeHTML(String(fp[k]))}</span>
+      </div>
+    `).join("");
+    debugEl.classList.add("show");
+  }
+
+  function escapeHTML(s) {
+    return String(s).replace(/[&<>"']/g, c =>
+      ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  }
 
   cta.addEventListener("click", async () => {
-    if (ref) {
-      const token = PREFIX + ref;
-      try {
-        await navigator.clipboard.writeText(token);
-      } catch (e) {
-        try {
-          const ta = document.createElement("textarea");
-          ta.value = token;
-          ta.style.position = "fixed";
-          ta.style.opacity = "0";
-          document.body.appendChild(ta);
-          ta.select();
-          document.execCommand("copy");
-          document.body.removeChild(ta);
-        } catch (_) {}
-      }
-    }
-    status.textContent = "Opening the App Store…";
     cta.disabled = true;
-    window.location.href = APP_STORE_URL;
+    status.textContent = "Saving click…";
+
+    const ip = await fetchIP();
+    const fp = buildFingerprint(ip);
+
+    try {
+      const newRef = push(ref(db, "clicks"));
+      await set(newRef, fp);
+      renderDebug({ ...fp, clickId: newRef.key });
+      status.textContent = "Opening the App Store…";
+    } catch (e) {
+      // Even on failure, still send the user to the store.
+      status.textContent = "Opening the App Store…";
+    }
+
+    setTimeout(() => { window.location.href = APP_STORE_URL; }, 600);
   });
 </script>
 </body>
