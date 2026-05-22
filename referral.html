@@ -51,22 +51,21 @@
   .debug {
     margin-top: 1.5rem; background: rgba(0,0,0,0.25);
     border: 1px solid #404040; border-radius: 12px;
-    padding: 0.9rem 1rem; text-align: left; font-size: 0.7rem; display: none;
-    max-height: 380px; overflow-y: auto;
+    padding: 0.9rem 1rem; text-align: left; font-size: 0.78rem; display: none;
   }
   .debug.show { display: block; }
   .debug-title {
-    font-size: 0.65rem; text-transform: uppercase;
+    font-size: 0.7rem; text-transform: uppercase;
     letter-spacing: 0.08em; color: #888; font-weight: 600;
     margin-bottom: 0.5rem;
   }
   .debug-row {
     display: flex; justify-content: space-between; gap: 0.5rem;
-    padding: 0.18rem 0;
-    border-bottom: 1px dashed rgba(255,255,255,0.05);
+    padding: 0.2rem 0;
+    border-bottom: 1px dashed rgba(255,255,255,0.06);
   }
   .debug-row:last-child { border-bottom: none; }
-  .debug-key { color: #888; font-family: ui-monospace, "SF Mono", Menlo, monospace; }
+  .debug-key { color: #888; }
   .debug-val {
     color: #fff; font-family: ui-monospace, "SF Mono", Menlo, monospace;
     text-align: right; word-break: break-all; max-width: 60%;
@@ -108,26 +107,12 @@
 
   const APP_STORE_URL = "https://apps.apple.com/us/app/lenix/id6753905127";
 
-  // Referrer from URL: /referral/USER_X or ?ref=USER_X
   const params = new URLSearchParams(location.search);
   let referrerID = (params.get("ref") || "").trim();
   if (!referrerID) {
     const m = location.pathname.match(/^\/referral\/([^/]+)\/?$/);
     if (m) referrerID = decodeURIComponent(m[1]).trim();
   }
-
-  // ─────────────────────────────────────────────────────────────
-  // Pipe-delimited schema for /clicks (positions 0–32):
-  //   0  ref     1  ip       2  l       3  pr     4  sh      5  sw
-  //   6  tz      7  t        8  ua      9  plat   10 hw      11 mem
-  //   12 tch    13 net      14 dwn     15 rtt     16 vw      17 vh
-  //   18 aw     19 ah       20 cd      21 ori     22 tof     23 scm
-  //   24 mot    25 src      26 ls      27 ck      28 dnt     29 webgl
-  //   30 cnv    31 bat      32 chg
-  // Long strings (ua, src, webgl) have "|" replaced with space.
-  // ─────────────────────────────────────────────────────────────
-
-  const safe = v => (v == null ? "" : String(v)).replace(/\|/g, " ");
 
   async function fetchIP() {
     try {
@@ -137,126 +122,26 @@
     } catch { return ""; }
   }
 
-  function canvasFP() {
-    try {
-      const c = document.createElement("canvas");
-      c.width = 240; c.height = 60;
-      const ctx = c.getContext("2d");
-      ctx.textBaseline = "alphabetic";
-      ctx.fillStyle = "#f60";
-      ctx.fillRect(125, 1, 62, 20);
-      ctx.fillStyle = "#069";
-      ctx.font = "11pt Arial";
-      ctx.fillText("Lenix " + String.fromCharCode(0x1F600), 2, 15);
-      ctx.fillStyle = "rgba(102, 204, 0, 0.7)";
-      ctx.font = "18pt Arial";
-      ctx.fillText("Lenix " + String.fromCharCode(0x1F600), 4, 45);
-      // Hash the dataURL into a short string
-      const s = c.toDataURL();
-      let h = 0;
-      for (let i = 0; i < s.length; i++) h = ((h << 5) - h + s.charCodeAt(i)) | 0;
-      return Math.abs(h).toString(36);
-    } catch { return ""; }
+  // Pipe-delimited: "ref|ip|l|pr|sh|sw|tz|t"
+  function buildClickString(ip) {
+    return [
+      referrerID || "",
+      ip || "",
+      navigator.language || "",
+      window.devicePixelRatio || 1,
+      window.screen.height,
+      window.screen.width,
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+      Date.now()
+    ].join("|");
   }
-
-  function webglRenderer() {
-    try {
-      const c = document.createElement("canvas");
-      const gl = c.getContext("webgl") || c.getContext("experimental-webgl");
-      if (!gl) return "";
-      const ext = gl.getExtension("WEBGL_debug_renderer_info");
-      const r = ext
-        ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL)
-        : gl.getParameter(gl.RENDERER);
-      return r || "";
-    } catch { return ""; }
-  }
-
-  async function getBattery() {
-    try {
-      if (!navigator.getBattery) return { level: "", charging: "" };
-      const b = await navigator.getBattery();
-      return { level: b.level, charging: b.charging ? 1 : 0 };
-    } catch { return { level: "", charging: "" }; }
-  }
-
-  function storageAvail(type) {
-    try {
-      const k = "__test__";
-      window[type].setItem(k, "1");
-      window[type].removeItem(k);
-      return 1;
-    } catch { return 0; }
-  }
-
-  function mediaPref(query) {
-    try {
-      if (!window.matchMedia) return "";
-      if (window.matchMedia("(prefers-color-scheme: dark)").matches && query === "scheme") return "dark";
-      if (query === "scheme") return "light";
-      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches && query === "motion") return "reduce";
-      if (query === "motion") return "no-preference";
-    } catch {}
-    return "";
-  }
-
-  async function buildClickString() {
-    const ip = await fetchIP();
-    const battery = await getBattery();
-    const conn = navigator.connection || navigator.mozConnection || navigator.webkitConnection || {};
-    const screenOri = (window.screen.orientation && window.screen.orientation.type) || "";
-
-    const fields = [
-      referrerID || "",                                                 // 0  ref
-      ip,                                                               // 1  ip
-      navigator.language || "",                                         // 2  l
-      window.devicePixelRatio || 1,                                     // 3  pr
-      window.screen.height,                                             // 4  sh
-      window.screen.width,                                              // 5  sw
-      (Intl.DateTimeFormat().resolvedOptions().timeZone) || "",         // 6  tz
-      Date.now(),                                                       // 7  t
-      safe(navigator.userAgent),                                        // 8  ua
-      navigator.platform || "",                                         // 9  plat
-      navigator.hardwareConcurrency ?? "",                              // 10 hw
-      navigator.deviceMemory ?? "",                                     // 11 mem
-      navigator.maxTouchPoints ?? "",                                   // 12 tch
-      conn.effectiveType || "",                                         // 13 net
-      conn.downlink ?? "",                                              // 14 dwn
-      conn.rtt ?? "",                                                   // 15 rtt
-      window.innerWidth,                                                // 16 vw
-      window.innerHeight,                                               // 17 vh
-      window.screen.availWidth,                                         // 18 aw
-      window.screen.availHeight,                                        // 19 ah
-      window.screen.colorDepth,                                         // 20 cd
-      screenOri,                                                        // 21 ori
-      new Date().getTimezoneOffset(),                                   // 22 tof  (minutes)
-      mediaPref("scheme"),                                              // 23 scm
-      mediaPref("motion"),                                              // 24 mot
-      safe(document.referrer || ""),                                    // 25 src
-      storageAvail("localStorage"),                                     // 26 ls
-      navigator.cookieEnabled ? 1 : 0,                                  // 27 ck
-      navigator.doNotTrack || "",                                       // 28 dnt
-      safe(webglRenderer()),                                            // 29 webgl
-      canvasFP(),                                                       // 30 cnv
-      battery.level,                                                    // 31 bat
-      battery.charging                                                  // 32 chg
-    ];
-
-    return fields.map(v => v == null ? "" : String(v)).join("|");
-  }
-
-  const LABELS = [
-    "ref","ip","l","pr","sh","sw","tz","t",
-    "ua","plat","hw","mem","tch","net","dwn","rtt",
-    "vw","vh","aw","ah","cd","ori","tof","scm",
-    "mot","src","ls","ck","dnt","webgl","cnv","bat","chg"
-  ];
 
   function renderDebug(s) {
+    const labels = ["ref", "ip", "l", "pr", "sh", "sw", "tz", "t"];
     const parts = s.split("|");
     const debugEl = document.getElementById("debug");
     const rows = document.getElementById("debugRows");
-    rows.innerHTML = LABELS.map((k, i) => `
+    rows.innerHTML = labels.map((k, i) => `
       <div class="debug-row">
         <span class="debug-key">${k}</span>
         <span class="debug-val">${esc(parts[i] ?? "")}</span>
@@ -274,7 +159,9 @@
     cta.disabled = true;
     status.textContent = "Saving…";
 
-    const s = await buildClickString();
+    const ip = await fetchIP();
+    const s = buildClickString(ip);
+
     try {
       const newRef = push(ref(db, "clicks"));
       await set(newRef, s);
