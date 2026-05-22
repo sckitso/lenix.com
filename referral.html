@@ -130,29 +130,28 @@
     } catch (e) { return ""; }
   }
 
-  // Minimal payload — keys are intentionally short to keep Realtime DB
-  // storage and bandwidth costs low. Order matters for visual consistency
-  // across the website, the iOS app, and the referrals dashboard:
-  //   ip, l, pr, ref, sh, sw, t, tz
-  function buildPayload(ip) {
-    return {
-      ip:  ip || "",
-      l:   navigator.language || "",
-      pr:  window.devicePixelRatio || 1,
-      ref: referrerID || "",
-      sh:  window.screen.height,
-      sw:  window.screen.width,
-      t:   Date.now(),
-      tz:  Intl.DateTimeFormat().resolvedOptions().timeZone || ""
-    };
+  // Single pipe-delimited string to minimize Realtime DB storage.
+  // Schema:  "ref|ip|l|pr|sh|sw|tz|t"
+  function buildClickString(ip) {
+    return [
+      referrerID || "",
+      ip || "",
+      navigator.language || "",
+      window.devicePixelRatio || 1,
+      window.screen.height,
+      window.screen.width,
+      Intl.DateTimeFormat().resolvedOptions().timeZone || "",
+      Date.now()
+    ].join("|");
   }
 
-  function renderDebug(p) {
-    const order = ["ip", "l", "pr", "ref", "sh", "sw", "t", "tz"];
-    debugRows.innerHTML = order.map(k => `
+  function renderDebug(s) {
+    const labels = ["ref", "ip", "l", "pr", "sh", "sw", "tz", "t"];
+    const parts = s.split("|");
+    debugRows.innerHTML = labels.map((k, i) => `
       <div class="debug-row">
         <span class="debug-key">${k}</span>
-        <span class="debug-val">${esc(String(p[k]))}</span>
+        <span class="debug-val">${esc(parts[i] ?? "")}</span>
       </div>`).join("");
     debugEl.classList.add("show");
   }
@@ -166,12 +165,12 @@
     status.textContent = "Saving…";
 
     const ip = await fetchIP();
-    const p = buildPayload(ip);
+    const s = buildClickString(ip);
 
     try {
       const newRef = push(ref(db, "clicks"));
-      await set(newRef, p);
-      renderDebug(p);
+      await set(newRef, s);
+      renderDebug(s);
       status.textContent = "Opening the App Store…";
     } catch (e) {
       status.textContent = "Opening the App Store…";
