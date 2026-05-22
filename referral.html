@@ -47,29 +47,6 @@
   .cta:hover { transform: translateY(-2px); }
   .cta[disabled] { background: #34c759; color: #fff; cursor: default; transform: none; }
   .status { margin-top: 1rem; font-size: 0.85rem; color: #888; min-height: 1.2em; }
-
-  .debug {
-    margin-top: 1.5rem; background: rgba(0,0,0,0.25);
-    border: 1px solid #404040; border-radius: 12px;
-    padding: 0.9rem 1rem; text-align: left; font-size: 0.78rem; display: none;
-  }
-  .debug.show { display: block; }
-  .debug-title {
-    font-size: 0.7rem; text-transform: uppercase;
-    letter-spacing: 0.08em; color: #888; font-weight: 600;
-    margin-bottom: 0.5rem;
-  }
-  .debug-row {
-    display: flex; justify-content: space-between; gap: 0.5rem;
-    padding: 0.2rem 0;
-    border-bottom: 1px dashed rgba(255,255,255,0.06);
-  }
-  .debug-row:last-child { border-bottom: none; }
-  .debug-key { color: #888; }
-  .debug-val {
-    color: #fff; font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    text-align: right; word-break: break-all; max-width: 60%;
-  }
   .footer { margin-top: 1.5rem; font-size: 0.8rem; color: #666; }
   .footer a { color: #b0b0b0; text-decoration: none; }
 </style>
@@ -80,10 +57,6 @@
   <h1>You're invited to Lenix</h1>
   <button class="cta" id="cta">Get Lenix</button>
   <p class="status" id="status">&nbsp;</p>
-  <div class="debug" id="debug">
-    <div class="debug-title">Sent to /clicks</div>
-    <div id="debugRows"></div>
-  </div>
   <p class="footer"><a href="https://lenixapp.com/">lenixapp.com</a></p>
 </main>
 
@@ -136,23 +109,6 @@
     ].join("|");
   }
 
-  function renderDebug(s) {
-    const labels = ["ref", "ip", "l", "pr", "sh", "sw", "tz", "t"];
-    const parts = s.split("|");
-    const debugEl = document.getElementById("debug");
-    const rows = document.getElementById("debugRows");
-    rows.innerHTML = labels.map((k, i) => `
-      <div class="debug-row">
-        <span class="debug-key">${k}</span>
-        <span class="debug-val">${esc(parts[i] ?? "")}</span>
-      </div>`).join("");
-    debugEl.classList.add("show");
-  }
-  function esc(s) {
-    return String(s ?? "").replace(/[&<>"']/g, c =>
-      ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
-  }
-
   document.getElementById("cta").addEventListener("click", async () => {
     const cta = document.getElementById("cta");
     const status = document.getElementById("status");
@@ -167,11 +123,8 @@
       // instead of accumulating duplicates. Costs less storage.
       const key = referrerID || "anonymous";
       await set(ref(db, "clicks/" + key), s);
-      renderDebug(s);
-      status.textContent = "Opening the App Store…";
-    } catch {
-      status.textContent = "Opening the App Store…";
-    }
+    } catch {}
+    status.textContent = "Opening the App Store…";
     setTimeout(() => { window.location.href = APP_STORE_URL; }, 600);
   });
 </script>
