@@ -201,11 +201,6 @@
     } catch (e) { return null; }
   }
 
-  function parseIOS(ua) {
-    const m = ua.match(/OS (\d+[_\.]\d+(?:[_\.]\d+)?)/);
-    return m ? m[1].replace(/_/g, ".") : "";
-  }
-
   function buildFingerprint(ip) {
     return {
       referrer: referrerID || "(none)",
@@ -215,7 +210,6 @@
       pixelRatio: window.devicePixelRatio || 1,
       lang: navigator.language || "",
       tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-      iosVersion: parseIOS(navigator.userAgent),
       userAgent: navigator.userAgent,
       platform: navigator.platform || "",
       timestamp: Date.now(),
@@ -225,7 +219,7 @@
 
   function renderDebug(fp) {
     const order = ["referrer", "ip", "screenW", "screenH", "pixelRatio",
-                   "lang", "tz", "iosVersion", "platform", "timestamp"];
+                   "lang", "tz", "platform", "timestamp"];
     debugRows.innerHTML = order.map(k => `
       <div class="debug-row">
         <span class="debug-key">${k}</span>
