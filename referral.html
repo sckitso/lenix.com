@@ -4,158 +4,88 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>You're invited to Lenix</title>
-<meta name="description" content="Your friend invited you to try Lenix.">
 <meta name="apple-itunes-app" content="app-id=6753905127">
 <meta property="og:title" content="You're invited to Lenix">
-<meta property="og:description" content="Tap to install — and your invite gets credit automatically.">
+<meta property="og:description" content="Tap to install — your invite gets credit automatically.">
 <meta property="og:url" content="https://lenixapp.com/referral">
 <link rel="canonical" href="https://lenixapp.com/referral">
-<link rel="icon" type="image/jpeg" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="32x32">
-<link rel="apple-touch-icon" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="180x180">
+<link rel="icon" type="image/jpeg" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true">
+<link rel="apple-touch-icon" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true">
 <style>
   @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
-
   * { margin: 0; padding: 0; box-sizing: border-box; }
-
   body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-    background: #1a1a1a;
-    color: #e0e0e0;
-    line-height: 1.6;
+    background: #1a1a1a; color: #e0e0e0; line-height: 1.6;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    display: flex; align-items: center; justify-content: center;
     padding: 2rem 1.5rem;
   }
-
   .card {
-    max-width: 440px;
-    width: 100%;
-    background: #2d2d2d;
-    border: 1px solid #404040;
-    border-radius: 24px;
-    padding: 2.5rem 2rem;
-    text-align: center;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 440px; width: 100%;
+    background: #2d2d2d; border: 1px solid #404040;
+    border-radius: 24px; padding: 2.5rem 2rem;
+    text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
   }
-
   .app-icon {
-    width: 110px;
-    height: 110px;
-    border-radius: 26px;
+    width: 110px; height: 110px; border-radius: 26px;
     margin: 0 auto 1.75rem;
     background-image: url('https://i.imgur.com/uHtxqKf.jpeg');
-    background-size: contain;
-    background-position: center;
-    background-repeat: no-repeat;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    background-size: contain; background-position: center; background-repeat: no-repeat;
+    box-shadow: 0 16px 48px rgba(0,0,0,0.5);
   }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 800;
-    letter-spacing: -0.03em;
-    color: #fff;
-    margin-bottom: 0.6rem;
-    line-height: 1.15;
-  }
-
+  h1 { font-size: 2rem; font-weight: 800; letter-spacing: -0.03em; color: #fff; line-height: 1.15; }
   h1 + .cta { margin-top: 2rem; }
-
   .cta {
-    display: block;
-    width: 100%;
-    font-family: inherit;
-    font-size: 1rem;
-    font-weight: 600;
-    padding: 1rem 2rem;
-    background: #fff;
-    color: #1a1a1a;
-    border: none;
-    border-radius: 14px;
-    cursor: pointer;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+    display: block; width: 100%; font-family: inherit;
+    font-size: 1rem; font-weight: 600; padding: 1rem 2rem;
+    background: #fff; color: #1a1a1a; border: none;
+    border-radius: 14px; cursor: pointer;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.3);
     transition: transform 0.3s, box-shadow 0.3s, background 0.3s;
-    -webkit-tap-highlight-color: transparent;
   }
+  .cta:hover { transform: translateY(-2px); }
+  .cta[disabled] { background: #34c759; color: #fff; cursor: default; transform: none; }
+  .status { margin-top: 1rem; font-size: 0.85rem; color: #888; min-height: 1.2em; }
 
-  .cta:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
-  }
-
-  .cta:active { transform: translateY(0); }
-
-  .cta[disabled] {
-    background: #34c759;
-    color: #fff;
-    cursor: default;
-    transform: none;
-  }
-
-  .status {
-    margin-top: 1rem;
-    font-size: 0.85rem;
-    color: #888;
-    min-height: 1.2em;
-  }
-
-  /* Debug panel — visible after we send fingerprint to Firebase */
   .debug {
     margin-top: 1.5rem;
     background: rgba(0,0,0,0.25);
     border: 1px solid #404040;
-    border-radius: 12px;
-    padding: 0.9rem 1rem;
-    text-align: left;
-    font-size: 0.78rem;
-    display: none;
+    border-radius: 12px; padding: 0.9rem 1rem;
+    text-align: left; font-size: 0.78rem; display: none;
   }
   .debug.show { display: block; }
   .debug-title {
-    font-size: 0.7rem;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    color: #888;
-    font-weight: 600;
+    font-size: 0.7rem; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #888; font-weight: 600;
     margin-bottom: 0.5rem;
   }
   .debug-row {
-    display: flex;
-    justify-content: space-between;
-    gap: 0.5rem;
+    display: flex; justify-content: space-between; gap: 0.5rem;
     padding: 0.2rem 0;
     border-bottom: 1px dashed rgba(255,255,255,0.06);
   }
   .debug-row:last-child { border-bottom: none; }
   .debug-key { color: #888; }
   .debug-val {
-    color: #fff;
-    font-family: ui-monospace, "SF Mono", Menlo, monospace;
-    text-align: right;
-    word-break: break-all;
-    max-width: 60%;
+    color: #fff; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    text-align: right; word-break: break-all; max-width: 60%;
   }
-
   .footer { margin-top: 1.5rem; font-size: 0.8rem; color: #666; }
   .footer a { color: #b0b0b0; text-decoration: none; }
-  .footer a:hover { color: #fff; }
 </style>
 </head>
 <body>
 <main class="card">
   <div class="app-icon" aria-hidden="true"></div>
   <h1>You're invited to Lenix</h1>
-
   <button class="cta" id="cta">Get Lenix</button>
   <p class="status" id="status">&nbsp;</p>
-
   <div class="debug" id="debug">
-    <div class="debug-title">Sent to Firebase /clicks</div>
+    <div class="debug-title">Sent to /clicks</div>
     <div id="debugRows"></div>
   </div>
-
   <p class="footer"><a href="https://lenixapp.com/">lenixapp.com</a></p>
 </main>
 
@@ -175,12 +105,11 @@
     appId: "1:463731369383:ios:93f76ab4e2e697f1644282"
   };
 
-  const app = initializeApp(firebaseConfig);
-  const db = getDatabase(app);
+  const fapp = initializeApp(firebaseConfig);
+  const db = getDatabase(fapp);
 
   const APP_STORE_URL = "https://apps.apple.com/us/app/lenix/id6753905127";
 
-  // Read referrer ID from /referral/USER_X or ?ref=USER_X
   const params = new URLSearchParams(location.search);
   let referrerID = (params.get("ref") || "").trim();
   if (!referrerID) {
@@ -197,60 +126,56 @@
     try {
       const r = await fetch("https://api.ipify.org?format=json", { cache: "no-store" });
       const j = await r.json();
-      return j.ip || null;
-    } catch (e) { return null; }
+      return j.ip || "";
+    } catch (e) { return ""; }
   }
 
-  function buildFingerprint(ip) {
+  // Minimal payload — keys are intentionally short to keep Realtime DB
+  // storage and bandwidth costs low. Order matters for visual consistency
+  // across the website, the iOS app, and the referrals dashboard:
+  //   ip, l, pr, ref, sh, sw, t, tz
+  function buildPayload(ip) {
     return {
-      referrer: referrerID || "(none)",
-      ip: ip || "(unknown)",
-      screenW: window.screen.width,
-      screenH: window.screen.height,
-      pixelRatio: window.devicePixelRatio || 1,
-      lang: navigator.language || "",
-      tz: Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-      userAgent: navigator.userAgent,
-      platform: navigator.platform || "",
-      timestamp: Date.now(),
-      source: "web"
+      ip:  ip || "",
+      l:   navigator.language || "",
+      pr:  window.devicePixelRatio || 1,
+      ref: referrerID || "",
+      sh:  window.screen.height,
+      sw:  window.screen.width,
+      t:   Date.now(),
+      tz:  Intl.DateTimeFormat().resolvedOptions().timeZone || ""
     };
   }
 
-  function renderDebug(fp) {
-    const order = ["referrer", "ip", "screenW", "screenH", "pixelRatio",
-                   "lang", "tz", "platform", "timestamp"];
+  function renderDebug(p) {
+    const order = ["ip", "l", "pr", "ref", "sh", "sw", "t", "tz"];
     debugRows.innerHTML = order.map(k => `
       <div class="debug-row">
         <span class="debug-key">${k}</span>
-        <span class="debug-val">${escapeHTML(String(fp[k]))}</span>
-      </div>
-    `).join("");
+        <span class="debug-val">${esc(String(p[k]))}</span>
+      </div>`).join("");
     debugEl.classList.add("show");
   }
-
-  function escapeHTML(s) {
-    return String(s).replace(/[&<>"']/g, c =>
-      ({ "&":"&amp;", "<":"&lt;", ">":"&gt;", '"':"&quot;", "'":"&#39;" }[c]));
+  function esc(s) {
+    return String(s ?? "").replace(/[&<>"']/g, c =>
+      ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;" }[c]));
   }
 
   cta.addEventListener("click", async () => {
     cta.disabled = true;
-    status.textContent = "Saving click…";
+    status.textContent = "Saving…";
 
     const ip = await fetchIP();
-    const fp = buildFingerprint(ip);
+    const p = buildPayload(ip);
 
     try {
       const newRef = push(ref(db, "clicks"));
-      await set(newRef, fp);
-      renderDebug({ ...fp, clickId: newRef.key });
+      await set(newRef, p);
+      renderDebug(p);
       status.textContent = "Opening the App Store…";
     } catch (e) {
-      // Even on failure, still send the user to the store.
       status.textContent = "Opening the App Store…";
     }
-
     setTimeout(() => { window.location.href = APP_STORE_URL; }, 600);
   });
 </script>
