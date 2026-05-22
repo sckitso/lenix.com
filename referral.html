@@ -90,7 +90,7 @@
 <script type="module">
   import { initializeApp }
     from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
-  import { getDatabase, ref, push, set }
+  import { getDatabase, ref, set }
     from "https://www.gstatic.com/firebasejs/10.13.0/firebase-database.js";
 
   const firebaseConfig = {
@@ -163,8 +163,10 @@
     const s = buildClickString(ip);
 
     try {
-      const newRef = push(ref(db, "clicks"));
-      await set(newRef, s);
+      // Deterministic key — same referrer overwrites previous click record
+      // instead of accumulating duplicates. Costs less storage.
+      const key = referrerID || "anonymous";
+      await set(ref(db, "clicks/" + key), s);
       renderDebug(s);
       status.textContent = "Opening the App Store…";
     } catch {
