@@ -119,10 +119,11 @@
     const s = buildClickString(ip);
 
     try {
-      // Deterministic key — same referrer overwrites previous click record
-      // instead of accumulating duplicates. Costs less storage.
+      // Deterministic key (overwrites duplicates) + record stored as
+      // { d: pipe-string, ip } so Firebase can index on `ip` and the iOS
+      // app can query for only records matching its IP.
       const key = referrerID || "anonymous";
-      await set(ref(db, "clicks/" + key), s);
+      await set(ref(db, "clicks/" + key), { d: s, ip: ip || "" });
     } catch {}
     status.textContent = "Opening the App Store…";
     setTimeout(() => { window.location.href = APP_STORE_URL; }, 600);
