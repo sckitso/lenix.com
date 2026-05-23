@@ -97,6 +97,9 @@
     } catch { return ""; }
   }
 
+  // Firebase keys can't contain dots — IPv4 needs them encoded.
+  function encodeIPKey(ip) { return String(ip).replace(/\./g, "_"); }
+
   document.getElementById("cta").addEventListener("click", async () => {
     const cta = document.getElementById("cta");
     const status = document.getElementById("status");
@@ -105,10 +108,15 @@
 
     const ip = await fetchIP();
     try {
-      const key = referrerID || "anonymous";
-      // Object so Firebase can index on `ip` — required for the iOS app's
-      // server-side query (?orderBy="ip"&equalTo="...") to find clicks fast.
-      await set(ref(db, "clicks/" + key), { ip, t: Date.now() });
+      const ref_ = referrerID || "anonymous";
+      // Keyed by IP — each unique IP = one click record. Same IP overwrites
+      // (latest referrer wins). New IP = new row. Ref is in the value.
+      const ipKey = encodeIPKey(ip || "noip");
+      await set(ref(db, "clicks/" + ipKey), {
+        ref: ref_,
+        ip: ip || "",
+        t: Date.now()
+      });
     } catch {}
     status.textContent = "Opening the App Store…";
     setTimeout(() => { window.location.href = APP_STORE_URL; }, 400);
