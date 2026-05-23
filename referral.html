@@ -61,6 +61,8 @@
 </main>
 
 <script type="module">
+  // IP-only attribution. Click record = { ip, t }. The dashboard / iOS app
+  // never see anything else from the visitor.
   import { initializeApp }
     from "https://www.gstatic.com/firebasejs/10.13.0/firebase-app.js";
   import { getDatabase, ref, set }
@@ -95,20 +97,6 @@
     } catch { return ""; }
   }
 
-  // Pipe-delimited "ref|ip|l|pr|sh|sw|tz|t"
-  function buildClickString(ip) {
-    return [
-      referrerID || "anonymous",
-      ip || "",
-      navigator.language || "",
-      window.devicePixelRatio || 1,
-      window.screen.height,
-      window.screen.width,
-      Intl.DateTimeFormat().resolvedOptions().timeZone || "",
-      Date.now()
-    ].join("|");
-  }
-
   document.getElementById("cta").addEventListener("click", async () => {
     const cta = document.getElementById("cta");
     const status = document.getElementById("status");
@@ -116,10 +104,11 @@
     status.textContent = "Saving…";
 
     const ip = await fetchIP();
-    const s = buildClickString(ip);
     try {
       const key = referrerID || "anonymous";
-      await set(ref(db, "clicks/" + key), { d: s, ip: ip || "" });
+      // Object so Firebase can index on `ip` — required for the iOS app's
+      // server-side query (?orderBy="ip"&equalTo="...") to find clicks fast.
+      await set(ref(db, "clicks/" + key), { ip, t: Date.now() });
     } catch {}
     status.textContent = "Opening the App Store…";
     setTimeout(() => { window.location.href = APP_STORE_URL; }, 400);
