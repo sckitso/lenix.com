@@ -3,213 +3,171 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="color-scheme" content="dark">
+    <meta name="theme-color" content="#1B1B1B">
     <title>Lenix</title>
     <link rel="icon" type="image/jpeg" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="32x32">
     <link rel="apple-touch-icon" href="https://github.com/sckitso/no/blob/main/Gemini_Generated_Image_wawr3kwawr3kwawr%202.jpg?raw=true" sizes="180x180">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        html {
-            scroll-behavior: smooth;
-        }
+        html { scroll-behavior: smooth; color-scheme: dark; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #1a1a1a;
+            background: #1B1B1B;
             color: #e0e0e0;
             line-height: 1.6;
             overflow-x: hidden;
         }
 
-        .view {
-            display: none;
-        }
-
-        .view.active {
-            display: block;
-        }
-
+        .view { display: none; }
+        .view.active { display: block; }
 
         /* Nav */
         nav {
-            background: rgba(26, 26, 26, 0.8);
-            padding: 0.8rem 1.5rem;
+            padding: 0.9rem 0;
             position: fixed;
             width: 100%;
             top: 0;
+            left: 0;
             z-index: 1000;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 1px solid #333;
         }
 
         nav .container {
-            max-width: 100%;
+            width: 100%;
             margin: 0;
+            padding: 0 2rem 0 1.2rem;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         nav .logo {
-            font-size: 1.4rem;
-            font-weight: 700;
+            font-size: 1.15rem;
+            font-weight: 400;
             color: #fff;
             display: flex;
             align-items: center;
-            gap: 0.6rem;
+            gap: 0.7rem;
             cursor: pointer;
             letter-spacing: -0.02em;
         }
 
         nav .logo img {
+            width: 27px;
+            height: 27px;
+            border-radius: 7px;
             transition: transform 0.3s ease;
         }
 
-        nav .logo:hover img {
-            transform: scale(1.1);
-        }
+        nav .logo:hover img { transform: scale(1.08); }
 
-        nav a {
-            color: rgba(255, 255, 255, 0.6);
+        nav .links a {
+            color: #fff;
             text-decoration: none;
-            margin-left: 2rem;
-            transition: color 0.3s;
+            margin-left: 1.4rem;
+            padding: 0.5rem 0.85rem;
+            border-radius: 8px;
+            transition: background 0.12s ease;
             cursor: pointer;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: 300;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
         }
 
-        nav a:hover {
-            color: #fff;
-        }
+        nav .links a svg { flex: 0 0 auto; }
+
+        nav .links a:hover { background: #2f2f2f; }
 
         /* Hero */
         .hero {
-            padding: 160px 2rem 120px;
-            text-align: center;
             position: relative;
-            z-index: 1;
-        }
-
-        .hero .container {
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .app-icon {
-            width: 140px;
-            height: 140px;
-            border-radius: 32px;
-            margin: 0 auto 2.5rem;
-            background-image: url('https://i.imgur.com/uHtxqKf.jpeg');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
             overflow: hidden;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+            background: #1B1B1B;
+        }
+
+        .hero-text {
+            flex: 0 0 50%;
+            max-width: 50%;
+            position: relative;
+            z-index: 2;
+            padding: 0 1rem;
+            text-align: center;
             opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(24px);
+            animation: rise 0.9s ease 0.15s forwards;
         }
 
-        .app-icon.visible {
-            opacity: 1;
-            transform: translateY(0);
+        @keyframes rise {
+            to { opacity: 1; transform: translateY(0); }
         }
 
-
-        h1 {
-            font-size: 4rem;
-            margin-bottom: 1rem;
+        .hero-text h1 {
+            font-size: clamp(1.5rem, 2.5vw, 2.7rem);
             font-weight: 800;
-            letter-spacing: -0.03em;
+            line-height: 1.12;
+            letter-spacing: -0.035em;
             color: #fff;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease 0.15s, transform 0.8s ease 0.15s;
         }
 
-        h1.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .hero-text h1 .hl { display: block; white-space: nowrap; }
+        .hero-text h1 .tw { color: #9146FF; }
+        .hero-text h1 .yt { color: #FF0000; }
 
-        .tagline {
-            font-size: 1.4rem;
-            color: #b0b0b0;
-            margin-bottom: 3rem;
+        .hero-text .sub {
+            margin: 1.4rem auto 0;
+            max-width: 660px;
+            min-height: 3em;            /* reserve 2 lines so swapping text doesn't shift the layout */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #525252;
+            font-size: clamp(0.78rem, 0.92vw, 0.98rem);
             font-weight: 400;
+            line-height: 1.5;
             letter-spacing: -0.01em;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease 0.3s, transform 0.8s ease 0.3s;
-        }
-
-        .tagline.visible {
-            opacity: 1;
-            transform: translateY(0);
+            transition: opacity 0.4s ease;
         }
 
         .download-buttons {
             display: flex;
-            gap: 1rem;
+            gap: 0.9rem;
             justify-content: center;
             align-items: center;
             flex-wrap: wrap;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease 0.45s, transform 0.8s ease 0.45s;
-        }
-
-        .download-buttons.visible {
-            opacity: 1;
-            transform: translateY(0);
+            margin-top: 2rem;
         }
 
         .btn {
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 2rem;
-            background: #fff;
-            color: #1a1a1a;
+            gap: 0.6rem;
+            padding: 0.7rem 1.4rem;
+            background: rgba(255, 255, 255, 0.07);
+            color: #fff;
             text-decoration: none;
-            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
             font-weight: 600;
-            transition: transform 0.3s, box-shadow 0.3s;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            transition: transform 0.3s, box-shadow 0.3s, background 0.3s, border-color 0.3s;
         }
 
         .btn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .btn.store-btn {
-            background: rgba(255, 255, 255, 0.07);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.12);
-            padding: 0.8rem 1.6rem;
-            gap: 0.7rem;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn.store-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
             border-color: rgba(255, 255, 255, 0.2);
-            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.3);
         }
 
-        .btn-secondary {
-            cursor: not-allowed;
-        }
+        .btn-secondary { cursor: not-allowed; opacity: 0.5; }
 
         .btn-secondary:hover {
             transform: none;
@@ -218,159 +176,147 @@
             border-color: rgba(255, 255, 255, 0.12);
         }
 
-        /* Features */
-        .features {
-            padding: 120px 2rem;
-            position: relative;
+        /* Phone showcase (right, bleeds off the right edge) */
+        .hero-visual {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            right: 0;
+            transform: translateY(-50%);
+            height: 78vh;
             z-index: 1;
+            opacity: 0;
+            animation: slideIn 1.1s ease 0.25s forwards;
         }
 
-        .features .container {
-            max-width: 1200px;
-            margin: 0 auto;
+        @keyframes slideIn {
+            to { opacity: 1; }
         }
 
-        .features h2 {
-            text-align: center;
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
+        /* Floating Twitch/YouTube icon field (behind the first image) */
+        .icon-field {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            overflow: hidden;
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.7s ease;
+        }
+
+        .icon-field.active { opacity: 1; }
+
+        .icon-field .fi {
+            position: absolute;
+            top: 0;
+            left: 0;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.22;
+            will-change: transform;
+        }
+
+        .icon-field .fi.tw { background-image: url('allemotes/twitch-icon.svg'); }
+        .icon-field .fi.yt { background-image: url('allemotes/youtube-icon.svg'); }
+
+        #emoteField .fi { opacity: 0.6; }
+        #pipField .fi, #ytField .fi { opacity: 0.5; }
+
+        .phone-scroller {
+            display: flex;
+            align-items: center;
+            gap: 1.6rem;
+            height: 100%;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            padding: 0 6rem;
+            scrollbar-width: none;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .phone-scroller::-webkit-scrollbar { height: 0; display: none; }
+
+        .phone-scroller img {
+            height: 100%;
+            width: auto;
+            flex: 0 0 auto;
+            display: block;
+            border-radius: 30px;
+            scroll-snap-align: center;
+            pointer-events: none;
+            user-select: none;
+            -webkit-user-drag: none;
+            opacity: 0.35;
+            transform: scale(0.9);
+            transition: opacity 0.35s ease, transform 0.35s ease;
+            backface-visibility: hidden;
+        }
+
+        .phone-scroller img.focused {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        /* Floating scroll buttons */
+        .scroll-nav {
+            position: fixed;
+            top: 50%;
+            right: 1.8rem;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 0.7rem;
+            z-index: 50;
+        }
+
+        .scroll-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.18);
             color: #fff;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-            opacity: 0;
-            transform: translateY(30px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
-        }
-
-        .features h2.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .features-subtitle {
-            text-align: center;
-            color: #b0b0b0;
             font-size: 1.1rem;
-            margin-bottom: 4rem;
-            opacity: 0;
-            transform: translateY(20px);
-            transition: opacity 0.8s ease 0.1s, transform 0.8s ease 0.1s;
-        }
-
-        .features-subtitle.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .feature-card {
-            background: #2d2d2d;
-            padding: 2.2rem;
-            border-radius: 20px;
-            border: 1px solid #404040;
-            transition: transform 0.4s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s ease, background 0.4s ease, box-shadow 0.4s ease;
-        }
-
-        .feature-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .feature-card:hover {
-            transform: translateY(-6px);
-            border-color: #606060;
-            background: #353535;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-        }
-
-        .feature-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 14px;
+            line-height: 1;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.4rem;
-            margin-bottom: 1.2rem;
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid #404040;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: background 0.25s ease, transform 0.25s ease, border-color 0.25s ease;
         }
 
-        .feature-card h3 {
-            font-size: 1.2rem;
-            margin-bottom: 0.5rem;
-            color: #fff;
-            font-weight: 700;
-        }
-
-        .feature-card p {
-            color: #b0b0b0;
-            font-size: 0.95rem;
-            line-height: 1.6;
-        }
-
-        /* Contact */
-        .contact {
-            padding: 120px 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 1;
-        }
-
-        .contact .container {
-            max-width: 700px;
-            margin: 0 auto;
-        }
-
-        .contact h2 {
-            font-size: 2.8rem;
-            margin-bottom: 1rem;
-            color: #fff;
-            font-weight: 800;
-            letter-spacing: -0.03em;
-        }
-
-        .contact p {
-            font-size: 1.15rem;
-            color: #b0b0b0;
-            margin-bottom: 2.5rem;
-        }
-
-        .contact a.contact-link {
-            color: #fff;
-            text-decoration: none;
-            font-size: 1.1rem;
-            font-weight: 500;
-            padding: 1rem 2.5rem;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid #404040;
-            border-radius: 14px;
-            display: inline-block;
-            transition: all 0.3s ease;
-        }
-
-        .contact a.contact-link:hover {
-            background: rgba(255, 255, 255, 0.15);
-            border-color: #606060;
+        .scroll-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.35);
             transform: translateY(-2px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
         }
 
-        /* Divider */
-        .section-divider {
-            width: 100%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #333, transparent);
-            max-width: 600px;
-            margin: 0 auto;
+        .scroll-btn:active { transform: translateY(0); }
+
+        .scroll-btn.hidden {
+            opacity: 0;
+            transform: scale(0.6);
+            pointer-events: none;
+        }
+
+        /* Footer copyright */
+        .hero-footer {
+            position: absolute;
+            bottom: 1.6rem;
+            left: 0;
+            width: 50%;
+            text-align: center;
+            color: #525252;
+            font-size: 0.92rem;
+            z-index: 2;
         }
 
         /* Privacy / Content pages */
@@ -378,8 +324,6 @@
             max-width: 900px;
             margin: 0 auto;
             padding: 150px 2rem 100px;
-            position: relative;
-            z-index: 1;
         }
 
         .content h1 {
@@ -388,14 +332,9 @@
             color: #fff;
             font-weight: 800;
             letter-spacing: -0.03em;
-            color: #fff;
         }
 
-        .last-updated {
-            color: #808080;
-            margin-bottom: 3rem;
-            font-size: 0.9rem;
-        }
+        .last-updated { color: #808080; margin-bottom: 3rem; font-size: 0.9rem; }
 
         .content h2 {
             font-size: 1.6rem;
@@ -405,11 +344,7 @@
             font-weight: 700;
         }
 
-        .content p {
-            margin-bottom: 1.5rem;
-            color: #b0b0b0;
-            font-size: 1.05rem;
-        }
+        .content p { margin-bottom: 1.5rem; color: #b0b0b0; font-size: 1.05rem; }
 
         .contact-box {
             background: #2d2d2d;
@@ -419,92 +354,103 @@
             border: 1px solid #404040;
         }
 
-        .contact-box h2 {
-            margin-top: 0;
-        }
+        .contact-box h2 { margin-top: 0; }
+        .contact-box a { color: #fff; text-decoration: none; transition: color 0.3s; }
+        .contact-box a:hover { text-decoration: underline; }
 
-        .contact-box a {
-            color: #fff;
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .contact-box a:hover {
-            text-decoration: underline;
-            color: #fff;
-        }
-
-        /* Footer */
-        footer {
-            background: #1a1a1a;
+        footer.page-footer {
+            background: #1B1B1B;
             padding: 2.5rem 2rem;
             text-align: center;
             border-top: 1px solid #333;
-            position: relative;
-            z-index: 1;
         }
 
-        footer p {
-            color: #808080;
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: #b0b0b0;
-            text-decoration: none;
-            margin: 0 1rem;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-
-        footer a:hover {
-            color: #fff;
-        }
+        footer.page-footer p { color: #808080; font-size: 0.9rem; }
 
         /* Responsive */
-        @media (max-width: 768px) {
-            h1 {
-                font-size: 2.8rem;
-            }
+        @media (max-width: 900px) {
+            nav { padding: 1.2rem 0; }
+            nav .container { width: 100%; padding: 0 1.4rem; }
+            nav .links a { margin-left: 1.3rem; font-size: 0.95rem; }
 
-            .tagline {
-                font-size: 1.1rem;
-            }
+            .hero { background: #1B1B1B; }
 
-            nav {
-                padding: 0.8rem 1rem;
-            }
-
-            nav .container {
+            .hero {
                 flex-direction: column;
-                gap: 0.8rem;
+                justify-content: flex-start;
+                text-align: center;
+                min-height: 0;
+                height: 100vh;
+                height: 100dvh;
+                overflow: hidden;
             }
 
-            nav .logo {
-                font-size: 1.3rem;
+            .hero-text {
+                flex: none;
+                width: 100%;
+                max-width: 100%;
+                padding: 78px 1.2rem 0;
+                animation: rise 0.9s ease 0.15s forwards;
             }
 
-            nav a {
-                margin-left: 0.8rem;
-                font-size: 0.85rem;
+            .hero-visual {
+                position: relative;
+                top: auto;
+                left: auto;
+                right: auto;
+                flex: 1 1 0;
+                min-height: 0;
+                height: auto;
+                width: 100%;
+                margin-top: 1rem;
+                transform: none;
+                animation: fadeUp 1s ease 0.3s forwards;
             }
 
-            .features h2, .contact h2 {
-                font-size: 2.2rem;
+            @keyframes fadeUp { to { opacity: 1; } }
+
+            .phone-scroller {
+                padding: 0 1rem;
+                gap: 1rem;
             }
 
-            .features-grid {
-                grid-template-columns: 1fr;
+            .phone-scroller img {
+                border-radius: 24px;
             }
 
-            .content h1 {
-                font-size: 2rem;
+            .scroll-nav {
+                top: auto;
+                bottom: 3.2rem;
+                right: 50%;
+                transform: translateX(50%);
             }
 
-            .content h2 {
-                font-size: 1.4rem;
+            .hero-footer {
+                position: static;
+                flex: none;
+                width: 100%;
+                padding: 0.7rem 1rem;
             }
+        }
+
+        @media (max-width: 768px) {
+            .content h1 { font-size: 2rem; }
+            .content h2 { font-size: 1.4rem; }
+        }
+
+        /* iPhone-size screens */
+        @media (max-width: 480px) {
+            .hero-text h1 { font-size: min(1.5rem, 6.6vw); }
+
+            nav .container { padding: 0 0.9rem; }
+            nav .links { display: flex; align-items: center; }
+            nav .links a {
+                margin-left: 0.35rem;
+                padding: 0.35rem 0.45rem;
+                font-size: 0.72rem;
+                gap: 0.28rem;
+            }
+            nav .links a svg { width: 13px; height: 13px; }
         }
     </style>
 </head>
@@ -514,115 +460,81 @@
         <nav>
             <div class="container">
                 <div class="logo" onclick="showView('home')">
-                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix">
                     Lenix
                 </div>
-                <div>
-                    <a href="#features">Features</a>
-                    <a href="#contact">Contact</a>
-                    <a onclick="showView('privacy')">Privacy Policy</a>
+                <div class="links">
+                    <a href="mailto:contact@lenixapp.com">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                        Contact
+                    </a>
+                    <a onclick="showView('privacy')">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="11" x="3" y="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                        Privacy Policy
+                    </a>
                 </div>
             </div>
         </nav>
 
         <section class="hero">
-            <div class="container">
-                <div class="app-icon animate-on-scroll"></div>
-                <h1 class="animate-on-scroll">Lenix</h1>
-                <p class="tagline animate-on-scroll">Watch Twitch and YouTube without ad interruptions</p>
-                <div class="download-buttons animate-on-scroll">
+            <div class="icon-field" id="iconField"></div>
+            <div class="icon-field" id="emoteField"></div>
+            <div class="icon-field" id="pipField"></div>
+            <div class="icon-field" id="ytField"></div>
+            <div class="hero-text">
+                <h1><span class="hl">Watch <span class="tw">Twitch</span> and <span class="yt">YouTube</span></span><span class="hl">without ad interruptions</span></h1>
+                <p class="sub">Lenix blocks ads on Twitch and YouTube while providing a seamless native<br>app experience. Just like the official Twitch and YouTube apps.</p>
+                <div class="download-buttons">
                     <a href="https://apps.apple.com/us/app/lenix/id6753905127" class="btn store-btn">
-                        <svg width="20" height="24" viewBox="0 0 814 1000" fill="#fff">
+                        <svg width="18" height="22" viewBox="0 0 814 1000" fill="#fff">
                             <path d="M788.1 340.9c-5.8 4.5-108.2 62.2-108.2 190.5 0 148.4 130.3 200.9 134.2 202.2-.6 3.2-20.7 71.9-68.7 141.9-42.8 61.6-87.5 123.1-155.5 123.1s-85.5-39.5-164-39.5c-76.5 0-103.7 40.8-165.9 40.8s-105.6-57.8-155.5-127.4c-58.3-81.6-105.3-208.4-105.3-328.6 0-193 125.4-295.5 248.9-295.5 65.6 0 120.3 43.1 161.4 43.1 39.2 0 100.2-45.7 174.5-45.7 28.2 0 129.5 2.6 196.1 95.1zM554.1 159.4c31.1-36.9 53.1-88.1 53.1-139.3 0-7.1-.6-14.3-1.9-20.1-50.6 1.9-110.8 33.7-147.1 75.8-28.9 32.4-54.4 83.6-54.4 135.5 0 7.8 1.3 15.6 1.9 18.1 3.2.6 8.4 1.3 13.6 1.3 45.4 0 103.1-30.4 134.8-71.3z"/>
                         </svg>
-                        <div style="text-align: left; line-height: 1.2;">
-                            <div style="font-size: 0.65rem; font-weight: 400;">Download on the</div>
-                            <div style="font-size: 1.1rem; font-weight: 600;">App Store</div>
+                        <div style="text-align: left; line-height: 1.15;">
+                            <div style="font-size: 0.6rem; font-weight: 400;">Download on the</div>
+                            <div style="font-size: 0.95rem; font-weight: 600;">App Store</div>
                         </div>
                     </a>
-                    <span class="btn btn-secondary store-btn" style="position: relative; overflow: hidden; opacity: 0.5;">
-                        <svg width="20" height="22" viewBox="0 0 505 584" fill="none">
+                    <span class="btn btn-secondary store-btn">
+                        <svg width="18" height="20" viewBox="0 0 505 584" fill="none">
                             <path d="M4.63 13.2C1.6 19.3 0 27.3 0 37v510c0 9.7 1.6 17.7 4.63 23.8L268 292 4.63 13.2z" fill="#4285F4"/>
                             <path d="M353 208L268 292l85 84 96-53.4c10.8-6 18.2-13 22-20.6 3.8-7.6 3.8-16.4 0-24-3.8-7.6-11.2-14.6-22-20.6L353 208z" fill="#FBBC04"/>
                             <path d="M268 292L4.63 570.8C8.3 578 14.5 583 23 583c5.2 0 11-1.6 17.4-5.2L353 376 268 292z" fill="#34A853"/>
                             <path d="M268 292L353 208 40.4 6.2C34 2.6 28.2 1 23 1 14.5 1 8.3 6 4.63 13.2L268 292z" fill="#EA4335"/>
                         </svg>
-                        <div style="text-align: left; line-height: 1.2;">
-                            <div style="font-size: 0.65rem; font-weight: 400;">Coming Soon</div>
-                            <div style="font-size: 1.1rem; font-weight: 600;">Google Play</div>
+                        <div style="text-align: left; line-height: 1.15;">
+                            <div style="font-size: 0.6rem; font-weight: 400;">Coming Soon</div>
+                            <div style="font-size: 0.95rem; font-weight: 600;">Google Play</div>
                         </div>
                     </span>
                 </div>
             </div>
-        </section>
 
-        <div class="section-divider"></div>
-
-        <section id="features" class="features">
-            <div class="container">
-                <h2 class="animate-on-scroll">Features</h2>
-                <p class="features-subtitle animate-on-scroll">Everything you need for uninterrupted streaming</p>
-                <div class="features-grid">
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x1F6AB;</div>
-                        <h3>Block Ads</h3>
-                        <p>No more interruptions on Twitch and YouTube</p>
-                    </div>
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x2728;</div>
-                        <h3>Native Experience</h3>
-                        <p>Feels like using the actual app with great UI</p>
-                    </div>
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x1F5BC;</div>
-                        <h3>Picture-in-Picture</h3>
-                        <p>Watch while using other apps</p>
-                    </div>
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x1F3B5;</div>
-                        <h3>Background Play</h3>
-                        <p>Keep streaming even when the app is closed</p>
-                    </div>
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x1F31F;</div>
-                        <h3>Dark Mode</h3>
-                        <p>Easy on the eyes for extended viewing</p>
-                    </div>
-                    <div class="feature-card animate-on-scroll">
-                        <div class="feature-icon">&#x1F4AC;</div>
-                        <h3>Twitch Chat</h3>
-                        <p>Full chat integration for live streams</p>
-                    </div>
+            <div class="hero-visual">
+                <div class="phone-scroller">
+                    <img src="allemotes/0x0ss.png" alt="2-in-1 YouTube & Twitch">
+                    <img src="allemotes/0x0ss%20(2).png" alt="Supports FTV, BTTV and FFZ emotes">
+                    <img src="allemotes/0x0ss%20(1).png" alt="Supports picture-in-picture & background play">
+                    <img src="allemotes/0x0ss%20(3).png" alt="Seamless native app experience">
                 </div>
             </div>
-        </section>
 
-        <div class="section-divider"></div>
+            <div class="hero-footer">&copy; 2025 Lenix. All rights reserved.</div>
 
-        <section id="contact" class="contact">
-            <div class="container">
-                <h2>Contact</h2>
-                <p>Questions or feedback? Get in touch</p>
-                <a class="contact-link" href="mailto:Lenixhelp@gmail.com">Lenixhelp@gmail.com</a>
+            <div class="scroll-nav">
+                <button id="prevBtn" class="scroll-btn" onclick="scrollCards(-1)" aria-label="Previous screenshot">&#8249;</button>
+                <button id="nextBtn" class="scroll-btn" onclick="scrollCards(1)" aria-label="Next screenshot">&#8250;</button>
             </div>
         </section>
-
-        <footer>
-            <p>&copy; 2025 Lenix. All rights reserved.</p>
-            <div style="margin-top: 1rem;">
-                <a onclick="showView('privacy')">Privacy Policy</a>
-            </div>
-        </footer>
     </div>
 
     <div id="privacyView" class="view">
         <nav>
             <div class="container">
                 <div class="logo" onclick="showView('home')">
-                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix" style="width: 32px; height: 32px; border-radius: 8px;">
+                    <img src="https://i.imgur.com/uHtxqKf.jpeg" alt="Lenix">
                     Lenix
                 </div>
-                <div>
+                <div class="links">
                     <a onclick="showView('home')">Home</a>
                 </div>
             </div>
@@ -672,16 +584,255 @@
             <div class="contact-box">
                 <h2>Contact Us</h2>
                 <p>If you have any questions about this Privacy Policy, please contact us at:</p>
-                <p><a href="mailto:Lenixhelp@gmail.com">Lenixhelp@gmail.com</a></p>
+                <p><a href="mailto:contact@lenixapp.com">contact@lenixapp.com</a></p>
             </div>
         </div>
 
-        <footer>
+        <footer class="page-footer">
             <p>&copy; 2025 Lenix. All rights reserved.</p>
         </footer>
     </div>
 
     <script>
+        // Screenshot scroller: arrow buttons + mouse-wheel horizontal scroll
+        function getScroller() { return document.querySelector('.phone-scroller'); }
+
+        function scrollCards(dir) {
+            const s = getScroller();
+            if (!s) return;
+            const card = s.querySelector('img');
+            const gap = parseFloat(getComputedStyle(s).columnGap || getComputedStyle(s).gap) || 24;
+            const step = card ? card.getBoundingClientRect().width + gap : s.clientWidth * 0.8;
+            s.scrollBy({ left: dir * step, behavior: 'smooth' });
+        }
+
+        function updateScrollButtons() {
+            const s = getScroller();
+            const prev = document.getElementById('prevBtn');
+            const next = document.getElementById('nextBtn');
+            if (!s || !prev || !next) return;
+            const max = s.scrollWidth - s.clientWidth;
+            prev.classList.toggle('hidden', s.scrollLeft <= 2);
+            next.classList.toggle('hidden', s.scrollLeft >= max - 2);
+        }
+
+        let onFocusChange = null;
+        function updateFocus() {
+            const s = getScroller();
+            if (!s) return;
+            const sRect = s.getBoundingClientRect();
+            const centerX = sRect.left + sRect.width / 2;
+            const imgs = s.querySelectorAll('img');
+            let best = null, bestDist = Infinity, bestIdx = -1;
+            imgs.forEach(function (img, i) {
+                const r = img.getBoundingClientRect();
+                const d = Math.abs((r.left + r.width / 2) - centerX);
+                if (d < bestDist) { bestDist = d; best = img; bestIdx = i; }
+            });
+            imgs.forEach(function (img) { img.classList.toggle('focused', img === best); });
+            if (onFocusChange) onFocusChange(bestIdx);
+        }
+
+        function fitScrollerPadding() {
+            const s = getScroller();
+            if (!s) return;
+            const card = s.querySelector('img');
+            if (!card || !card.offsetWidth) return;
+            const pad = Math.max(16, (s.getBoundingClientRect().width - card.offsetWidth) / 2);
+            s.style.paddingLeft = pad + 'px';
+            s.style.paddingRight = pad + 'px';
+        }
+
+        window.addEventListener('load', function () {
+            const s = getScroller();
+            if (s) {
+                // Tap the left half to go back, the right half to go forward.
+                s.addEventListener('click', function (e) {
+                    const r = s.getBoundingClientRect();
+                    if (e.clientX < r.left + r.width / 2) scrollCards(-1);
+                    else scrollCards(1);
+                });
+
+                let rafPending = null;
+                s.addEventListener('scroll', function () {
+                    if (rafPending) return;
+                    rafPending = requestAnimationFrame(function () {
+                        rafPending = null;
+                        updateScrollButtons();
+                        updateFocus();
+                    });
+                }, { passive: true });
+                fitScrollerPadding();
+                updateScrollButtons();
+                updateFocus();
+            }
+            window.addEventListener('resize', function () { fitScrollerPadding(); updateScrollButtons(); updateFocus(); });
+
+            // ---- Floating icon fields (factory: same physics, different icons) ----
+            function createField(el, count, assign, fixedSize) {
+                if (!el) return null;
+                const items = [];
+                let mx = -9999, my = -9999, running = false, rafId = null, startTime = null;
+                const POP_DUR = 650;
+                function easeOutBack(t) { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(t - 1, 3) + c1 * Math.pow(t - 1, 2); }
+                function build() {
+                    if (items.length) return;
+                    const W = el.clientWidth, H = el.clientHeight;
+                    for (let i = 0; i < count; i++) {
+                        const d = document.createElement('div');
+                        d.className = 'fi';
+                        assign(d, i);
+                        const size = fixedSize || (20 + Math.random() * 30);
+                        d.style.width = d.style.height = size + 'px';
+                        el.appendChild(d);
+                        const base = 0.25 + Math.random() * 0.35;
+                        const ang = Math.random() * Math.PI * 2;
+                        items.push({
+                            el: d, size: size, base: base,
+                            x: Math.random() * (W - size), y: Math.random() * (H - size),
+                            vx: Math.cos(ang) * base, vy: Math.sin(ang) * base,
+                            rot: Math.random() * 360, vr: (Math.random() - 0.5) * 0.25,
+                            delay: Math.random() * 600
+                        });
+                    }
+                }
+                window.addEventListener('mousemove', function (e) {
+                    const r = el.getBoundingClientRect(); mx = e.clientX - r.left; my = e.clientY - r.top;
+                });
+                function tick() {
+                    const W = el.clientWidth, H = el.clientHeight, R = 140, now = performance.now();
+                    // 1) cursor repel, cruise speed, move
+                    for (const p of items) {
+                        const dx = p.x - mx, dy = p.y - my, d2 = dx * dx + dy * dy;
+                        if (d2 < R * R) { const d = Math.sqrt(d2) || 1, f = (1 - d / R); p.vx += (dx / d) * f * 0.9; p.vy += (dy / d) * f * 0.9; }
+                        p.vx *= 0.985; p.vy *= 0.985;
+                        const sp = Math.hypot(p.vx, p.vy);
+                        if (sp < p.base) {
+                            if (sp > 0.0001) { p.vx = p.vx / sp * p.base; p.vy = p.vy / sp * p.base; }
+                            else { const a = Math.random() * Math.PI * 2; p.vx = Math.cos(a) * p.base; p.vy = Math.sin(a) * p.base; }
+                        }
+                        p.x += p.vx; p.y += p.vy; p.rot += p.vr;
+                        p.r = p.size * 0.46;
+                    }
+                    // 2) bounce off each other (separate + exchange velocity along normal)
+                    for (let i = 0; i < items.length; i++) {
+                        const a = items[i], ax = a.x + a.size / 2, ay = a.y + a.size / 2;
+                        for (let j = i + 1; j < items.length; j++) {
+                            const b = items[j];
+                            const nx = (b.x + b.size / 2) - ax, ny = (b.y + b.size / 2) - ay;
+                            const dist = Math.hypot(nx, ny), minD = a.r + b.r;
+                            if (dist > 0 && dist < minD) {
+                                const ux = nx / dist, uy = ny / dist, overlap = (minD - dist) / 2;
+                                a.x -= ux * overlap; a.y -= uy * overlap;
+                                b.x += ux * overlap; b.y += uy * overlap;
+                                const rel = (b.vx - a.vx) * ux + (b.vy - a.vy) * uy;
+                                if (rel < 0) {
+                                    a.vx += rel * ux; a.vy += rel * uy;
+                                    b.vx -= rel * ux; b.vy -= rel * uy;
+                                }
+                            }
+                        }
+                    }
+                    // 3) bounce off walls + draw
+                    for (const p of items) {
+                        if (p.x < 0) { p.x = 0; p.vx = Math.abs(p.vx); }
+                        else if (p.x > W - p.size) { p.x = W - p.size; p.vx = -Math.abs(p.vx); }
+                        if (p.y < 0) { p.y = 0; p.vy = Math.abs(p.vy); }
+                        else if (p.y > H - p.size) { p.y = H - p.size; p.vy = -Math.abs(p.vy); }
+                        let scale = 1;
+                        if (startTime !== null) { const e = now - startTime - p.delay; scale = e <= 0 ? 0 : (e < POP_DUR ? Math.max(0, easeOutBack(e / POP_DUR)) : 1); }
+                        p.el.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px) rotate(' + p.rot + 'deg) scale(' + scale + ')';
+                    }
+                    rafId = requestAnimationFrame(tick);
+                }
+                return {
+                    start: function () { build(); el.classList.add('active'); if (!running) { startTime = performance.now(); running = true; tick(); } },
+                    stop: function () { el.classList.remove('active'); if (running) { running = false; cancelAnimationFrame(rafId); } }
+                };
+            }
+
+            const fieldTY = createField(document.getElementById('iconField'), 30, function (d, i) {
+                d.classList.add(i % 2 === 0 ? 'tw' : 'yt');
+            }, 46);
+            // all emotes from the allemotes folder (each shown once, no duplicates)
+            const EMOTES = [
+                'allemotes/2x%2818%29.webp',
+                'allemotes/2x%2823%29.webp',
+                'allemotes/2x%2828%29.webp',
+                'allemotes/2x%2829%29.webp',
+                'allemotes/2x%283%29.webp',
+                'allemotes/2x%2830%29.webp',
+                'allemotes/2x%2832%29.webp',
+                'allemotes/2x%2833%29.webp',
+                'allemotes/2x%2835%29.webp',
+                'allemotes/2x%284%29.webp',
+                'allemotes/2x%285%29.webp',
+                'allemotes/2x%286%29.webp',
+                'allemotes/2x%287%29.webp',
+                'allemotes/2x%288%29.webp',
+                'allemotes/2x.webp',
+                'allemotes/D_-4x.webp',
+                'allemotes/GIGACHAD-4x%20%281%29.webp',
+                'allemotes/HUH-4x.webp',
+                'allemotes/KEKJ-4x.webp',
+                'allemotes/LOL-4x.webp',
+                'allemotes/OmegalulCat-4x.webp',
+                'allemotes/Prayge-4x.webp',
+                'allemotes/SNIFFA-4x.webp',
+                'allemotes/SUSSY-4x.webp',
+                'allemotes/SpeedLaugh-4x.webp',
+                'allemotes/lol-4x%20%281%29.webp',
+                'allemotes/lol-4x%20copy.webp',
+                'allemotes/ome45-4x.webp',
+                'allemotes/omeJudging-4x.webp',
+                'allemotes/uuh-4x.webp'
+            ];
+            const fieldEmote = createField(document.getElementById('emoteField'), EMOTES.length, function (d, i) {
+                d.style.backgroundImage = "url('" + EMOTES[i] + "')";
+            }, 46);
+
+            // image 3 — Picture-in-Picture & background play (white playback icons)
+            const PIP_ICONS = ['allemotes/ic-play.svg', 'allemotes/ic-pause.svg', 'allemotes/ic-headphones.svg', 'allemotes/ic-music.svg', 'allemotes/ic-volume.svg', 'allemotes/ic-pip.svg'];
+            const fieldPip = createField(document.getElementById('pipField'), 30, function (d, i) {
+                d.style.backgroundImage = "url('" + PIP_ICONS[i % PIP_ICONS.length] + "')";
+            }, 42);
+
+            // image 4 — native YouTube experience (red YouTube-action icons)
+            const YT_ICONS = ['allemotes/ic-like.svg', 'allemotes/ic-bell.svg', 'allemotes/ic-ytplay.svg', 'allemotes/noyhome.svg', 'allemotes/noyhome%202.svg', 'allemotes/noyhome%20copy.svg', 'allemotes/noyhome%202%20copy.svg'];
+            const fieldYt = createField(document.getElementById('ytField'), 30, function (d, i) {
+                d.style.backgroundImage = "url('" + YT_ICONS[i % YT_ICONS.length] + "')";
+            }, 42);
+
+            // crossfade the gray subtext per focused image
+            const sub = document.querySelector('.hero-text .sub');
+            const DEFAULT_SUB = 'Lenix blocks ads on Twitch and YouTube while providing a seamless native<br>app experience. Just like the official Twitch and YouTube apps.';
+            const SUBTEXTS = {
+                1: 'Watch streams with full support for 7TV, BTTV, and FFZ emotes in the chat',
+                2: 'Keep watching or listening even when you leave the app with Picture-in-Picture and background play.',
+                3: 'Delivers a completely native experience, just like using the official YouTube app'
+            };
+            let subTimer = null;
+            if (sub) sub.dataset.text = DEFAULT_SUB;
+            function setSubtext(idx) {
+                if (!sub) return;
+                const text = SUBTEXTS[idx] || DEFAULT_SUB;
+                if (sub.dataset.text === text) return;
+                sub.dataset.text = text;
+                sub.style.opacity = '0';
+                clearTimeout(subTimer);
+                subTimer = setTimeout(function () { sub.innerHTML = text; sub.style.opacity = '1'; }, 380);
+            }
+
+            onFocusChange = function (idx) {
+                if (fieldTY) { idx === 0 ? fieldTY.start() : fieldTY.stop(); }
+                if (fieldEmote) { idx === 1 ? fieldEmote.start() : fieldEmote.stop(); }
+                if (fieldPip) { idx === 2 ? fieldPip.start() : fieldPip.stop(); }
+                if (fieldYt) { idx === 3 ? fieldYt.start() : fieldYt.stop(); }
+                setSubtext(idx);
+            };
+            updateFocus();   // kick off based on the initially focused image
+        });
+
         function showView(view) {
             document.getElementById('homeView').classList.remove('active');
             document.getElementById('privacyView').classList.remove('active');
@@ -689,23 +840,15 @@
             if (view === 'home') {
                 document.getElementById('homeView').classList.add('active');
                 window.history.pushState({view: 'home'}, '', '/');
-                window.scrollTo(0, 0);
             } else if (view === 'privacy') {
                 document.getElementById('privacyView').classList.add('active');
                 window.history.pushState({view: 'privacy'}, '', '/privacypolicy');
-                window.scrollTo(0, 0);
             }
-
-            // Re-trigger animations
-            setTimeout(initAnimations, 100);
+            window.scrollTo(0, 0);
         }
 
         window.addEventListener('popstate', function(event) {
-            if (event.state && event.state.view) {
-                showView(event.state.view);
-            } else {
-                showView('home');
-            }
+            showView(event.state && event.state.view ? event.state.view : 'home');
         });
 
         window.addEventListener('load', function() {
@@ -713,36 +856,6 @@
                 showView('privacy');
             }
         });
-
-        // Scroll-triggered animations
-        function initAnimations() {
-            const observer = new IntersectionObserver(function(entries) {
-                entries.forEach(function(entry, index) {
-                    if (entry.isIntersecting) {
-                        // Stagger cards
-                        const parent = entry.target.parentElement;
-                        if (parent && parent.classList.contains('features-grid')) {
-                            const siblings = Array.from(parent.querySelectorAll('.feature-card'));
-                            const i = siblings.indexOf(entry.target);
-                            setTimeout(function() {
-                                entry.target.classList.add('visible');
-                            }, i * 100);
-                        } else {
-                            entry.target.classList.add('visible');
-                        }
-                        observer.unobserve(entry.target);
-                    }
-                });
-            }, { threshold: 0.1 });
-
-            document.querySelectorAll('.animate-on-scroll').forEach(function(el) {
-                if (!el.classList.contains('visible')) {
-                    observer.observe(el);
-                }
-            });
-        }
-
-        initAnimations();
     </script>
 </body>
 </html>
