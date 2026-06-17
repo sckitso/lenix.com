@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-  <rect width="100" height="100" rx="20" fill="#041119"/>
-  <g fill="none" stroke="#ffffff" stroke-width="3.3" stroke-linecap="square" stroke-linejoin="miter">
-    <path d="M51.8 27 V57.5 H68.4"/>
-    <path d="M45.6 27 V63.5 H68.4"/>
-    <path d="M39.5 27 V69.5 H68.4"/>
-    <path d="M33.3 27 V75.5 H68.4"/>
-  </g>
-</svg>
