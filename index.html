@@ -90,6 +90,7 @@
             min-height: 100vh;
             display: flex;
             align-items: center;
+            justify-content: flex-end;
             overflow: hidden;
             background: #1B1B1B;
         }
@@ -175,12 +176,12 @@
             border-color: rgba(255, 255, 255, 0.12);
         }
 
-        /* Phone showcase (right, bleeds off the right edge) */
+        /* Phone showcase (left half) */
         .hero-visual {
             position: absolute;
             top: 50%;
-            left: 50%;
-            right: 0;
+            left: 0;
+            right: 50%;
             transform: translateY(-50%);
             height: 78vh;
             z-index: 1;
@@ -238,6 +239,7 @@
             scrollbar-width: none;
             cursor: pointer;
             user-select: none;
+            direction: rtl;   /* image 1 on the right, 2/3/4 trail to its left */
         }
 
         .phone-scroller::-webkit-scrollbar { height: 0; display: none; }
@@ -267,7 +269,7 @@
         .scroll-nav {
             position: fixed;
             top: 50%;
-            right: 1.8rem;
+            left: 1.8rem;
             transform: translateY(-50%);
             display: flex;
             gap: 0.7rem;
@@ -310,7 +312,7 @@
         .hero-footer {
             position: absolute;
             bottom: 1.6rem;
-            left: 0;
+            right: 0;
             width: 50%;
             text-align: center;
             color: #525252;
@@ -603,21 +605,29 @@
         // Screenshot scroller: arrow buttons + mouse-wheel horizontal scroll
         function getScroller() { return document.querySelector('.phone-scroller'); }
 
+        // the focus point: center of the scroller viewport
+        function focusTargetX(s) { const r = s.getBoundingClientRect(); return r.left + r.width / 2; }
+
+        // index of the image currently nearest the focus point
+        function focusedIndex(s) {
+            const cards = s.querySelectorAll('img');
+            const targetX = focusTargetX(s);
+            let cur = 0, best = Infinity;
+            cards.forEach(function (c, i) {
+                const r = c.getBoundingClientRect();
+                const d = Math.abs((r.left + r.width / 2) - targetX);
+                if (d < best) { best = d; cur = i; }
+            });
+            return cur;
+        }
+
         function scrollCards(dir) {
             const s = getScroller();
             if (!s) return;
             const cards = s.querySelectorAll('img');
             if (!cards.length) return;
-            const sRect = s.getBoundingClientRect(), centerX = sRect.left + sRect.width / 2;
-            let cur = 0, best = Infinity;
-            cards.forEach(function (c, i) {
-                const r = c.getBoundingClientRect();
-                const d = Math.abs((r.left + r.width / 2) - centerX);
-                if (d < best) { best = d; cur = i; }
-            });
-            const ni = Math.max(0, Math.min(cards.length - 1, cur + dir));
-            const r = cards[ni].getBoundingClientRect();
-            s.scrollTo({ left: s.scrollLeft + (r.left + r.width / 2) - centerX, behavior: 'smooth' });
+            const ni = Math.max(0, Math.min(cards.length - 1, focusedIndex(s) + dir));
+            cards[ni].scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
         // re-center the nearest image (safety net for imperfect native snaps)
@@ -626,14 +636,14 @@
             if (!s) return;
             const cards = s.querySelectorAll('img');
             if (!cards.length) return;
-            const sRect = s.getBoundingClientRect(), centerX = sRect.left + sRect.width / 2;
-            let off = 0, best = Infinity;
+            const targetX = focusTargetX(s);
+            let nearest = null, best = Infinity;
             cards.forEach(function (c) {
                 const r = c.getBoundingClientRect();
-                const d = (r.left + r.width / 2) - centerX;
-                if (Math.abs(d) < best) { best = Math.abs(d); off = d; }
+                const d = Math.abs((r.left + r.width / 2) - targetX);
+                if (d < best) { best = d; nearest = c; }
             });
-            if (Math.abs(off) > 3) s.scrollTo({ left: s.scrollLeft + off, behavior: 'smooth' });
+            if (best > 3 && nearest) nearest.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
         }
 
         function updateScrollButtons() {
@@ -641,22 +651,23 @@
             const prev = document.getElementById('prevBtn');
             const next = document.getElementById('nextBtn');
             if (!s || !prev || !next) return;
-            const max = s.scrollWidth - s.clientWidth;
-            prev.classList.toggle('hidden', s.scrollLeft <= 6);
-            next.classList.toggle('hidden', s.scrollLeft >= max - 6);
+            const cards = s.querySelectorAll('img');
+            if (!cards.length) return;
+            const cur = focusedIndex(s);
+            prev.classList.toggle('hidden', cur <= 0);
+            next.classList.toggle('hidden', cur >= cards.length - 1);
         }
 
         let onFocusChange = null;
         function updateFocus() {
             const s = getScroller();
             if (!s) return;
-            const sRect = s.getBoundingClientRect();
-            const centerX = sRect.left + sRect.width / 2;
+            const targetX = focusTargetX(s);
             const imgs = s.querySelectorAll('img');
             let best = null, bestDist = Infinity, bestIdx = -1;
             imgs.forEach(function (img, i) {
                 const r = img.getBoundingClientRect();
-                const d = Math.abs((r.left + r.width / 2) - centerX);
+                const d = Math.abs((r.left + r.width / 2) - targetX);
                 if (d < bestDist) { bestDist = d; best = img; bestIdx = i; }
             });
             imgs.forEach(function (img) { img.classList.toggle('focused', img === best); });
@@ -676,11 +687,11 @@
         window.addEventListener('load', function () {
             const s = getScroller();
             if (s) {
-                // Tap the left half to go back, the right half to go forward.
+                // mirrored layout: tap the left half (toward 2/3/4) to advance, right half to go back
                 s.addEventListener('click', function (e) {
                     const r = s.getBoundingClientRect();
-                    if (e.clientX < r.left + r.width / 2) scrollCards(-1);
-                    else scrollCards(1);
+                    if (e.clientX < r.left + r.width / 2) scrollCards(1);
+                    else scrollCards(-1);
                 });
 
                 let rafPending = null, scrollEndTimer = null;
@@ -696,6 +707,8 @@
                     scrollEndTimer = setTimeout(centerNearest, 130);
                 }, { passive: true });
                 fitScrollerPadding();
+                const first = s.querySelector('img');
+                if (first) first.scrollIntoView({ block: 'nearest', inline: 'center' });   // start on image 1
                 updateScrollButtons();
                 updateFocus();
             }
