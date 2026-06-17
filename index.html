@@ -601,10 +601,34 @@
         function scrollCards(dir) {
             const s = getScroller();
             if (!s) return;
-            const card = s.querySelector('img');
-            const gap = parseFloat(getComputedStyle(s).columnGap || getComputedStyle(s).gap) || 24;
-            const step = card ? card.getBoundingClientRect().width + gap : s.clientWidth * 0.8;
-            s.scrollBy({ left: dir * step, behavior: 'smooth' });
+            const cards = s.querySelectorAll('img');
+            if (!cards.length) return;
+            const sRect = s.getBoundingClientRect(), centerX = sRect.left + sRect.width / 2;
+            let cur = 0, best = Infinity;
+            cards.forEach(function (c, i) {
+                const r = c.getBoundingClientRect();
+                const d = Math.abs((r.left + r.width / 2) - centerX);
+                if (d < best) { best = d; cur = i; }
+            });
+            const ni = Math.max(0, Math.min(cards.length - 1, cur + dir));
+            const r = cards[ni].getBoundingClientRect();
+            s.scrollTo({ left: s.scrollLeft + (r.left + r.width / 2) - centerX, behavior: 'smooth' });
+        }
+
+        // re-center the nearest image (safety net for imperfect native snaps)
+        function centerNearest() {
+            const s = getScroller();
+            if (!s) return;
+            const cards = s.querySelectorAll('img');
+            if (!cards.length) return;
+            const sRect = s.getBoundingClientRect(), centerX = sRect.left + sRect.width / 2;
+            let off = 0, best = Infinity;
+            cards.forEach(function (c) {
+                const r = c.getBoundingClientRect();
+                const d = (r.left + r.width / 2) - centerX;
+                if (Math.abs(d) < best) { best = Math.abs(d); off = d; }
+            });
+            if (Math.abs(off) > 3) s.scrollTo({ left: s.scrollLeft + off, behavior: 'smooth' });
         }
 
         function updateScrollButtons() {
@@ -613,8 +637,8 @@
             const next = document.getElementById('nextBtn');
             if (!s || !prev || !next) return;
             const max = s.scrollWidth - s.clientWidth;
-            prev.classList.toggle('hidden', s.scrollLeft <= 2);
-            next.classList.toggle('hidden', s.scrollLeft >= max - 2);
+            prev.classList.toggle('hidden', s.scrollLeft <= 6);
+            next.classList.toggle('hidden', s.scrollLeft >= max - 6);
         }
 
         let onFocusChange = null;
@@ -654,14 +678,17 @@
                     else scrollCards(1);
                 });
 
-                let rafPending = null;
+                let rafPending = null, scrollEndTimer = null;
                 s.addEventListener('scroll', function () {
-                    if (rafPending) return;
-                    rafPending = requestAnimationFrame(function () {
-                        rafPending = null;
-                        updateScrollButtons();
-                        updateFocus();
-                    });
+                    if (!rafPending) {
+                        rafPending = requestAnimationFrame(function () {
+                            rafPending = null;
+                            updateScrollButtons();
+                            updateFocus();
+                        });
+                    }
+                    clearTimeout(scrollEndTimer);
+                    scrollEndTimer = setTimeout(centerNearest, 130);
                 }, { passive: true });
                 fitScrollerPadding();
                 updateScrollButtons();
