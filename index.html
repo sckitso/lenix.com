@@ -775,12 +775,30 @@
                             }
                         }
                     }
-                    // 3) bounce off walls + draw
+                    // obstacle rects: the phone images (bounce off them, don't go under)
+                    const er = el.getBoundingClientRect(), obs = [];
+                    document.querySelectorAll('.phone-scroller img').forEach(function (im) {
+                        const r = im.getBoundingClientRect();
+                        if (r.width && r.right > er.left && r.left < er.right && r.bottom > er.top && r.top < er.bottom)
+                            obs.push({ x0: r.left - er.left, y0: r.top - er.top, x1: r.right - er.left, y1: r.bottom - er.top });
+                    });
+                    // 3) bounce off walls + image obstacles + draw
                     for (const p of items) {
                         if (p.x < 0) { p.x = 0; p.vx = Math.abs(p.vx); }
                         else if (p.x > W - p.size) { p.x = W - p.size; p.vx = -Math.abs(p.vx); }
                         if (p.y < 0) { p.y = 0; p.vy = Math.abs(p.vy); }
                         else if (p.y > H - p.size) { p.y = H - p.size; p.vy = -Math.abs(p.vy); }
+                        const rad = p.size * 0.46, cx = p.x + p.size / 2, cy = p.y + p.size / 2;
+                        for (const ob of obs) {
+                            if (cx > ob.x0 - rad && cx < ob.x1 + rad && cy > ob.y0 - rad && cy < ob.y1 + rad) {
+                                const dl = cx - (ob.x0 - rad), dr = (ob.x1 + rad) - cx, dt = cy - (ob.y0 - rad), db = (ob.y1 + rad) - cy;
+                                const m = Math.min(dl, dr, dt, db);
+                                if (m === dl) { p.x = ob.x0 - rad - p.size / 2; if (p.vx > 0) p.vx = -p.vx; }
+                                else if (m === dr) { p.x = ob.x1 + rad - p.size / 2; if (p.vx < 0) p.vx = -p.vx; }
+                                else if (m === dt) { p.y = ob.y0 - rad - p.size / 2; if (p.vy > 0) p.vy = -p.vy; }
+                                else { p.y = ob.y1 + rad - p.size / 2; if (p.vy < 0) p.vy = -p.vy; }
+                            }
+                        }
                         let scale = 1;
                         if (startTime !== null) { const e = now - startTime - p.delay; scale = e <= 0 ? 0 : (e < POP_DUR ? Math.max(0, easeOutBack(e / POP_DUR)) : 1); }
                         p.el.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px) rotate(' + p.rot + 'deg) scale(' + scale + ')';
