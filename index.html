@@ -845,16 +845,32 @@
                 2: 'Keep watching or listening even when you leave the app with Picture-in-Picture and background play.',
                 3: 'Delivers a completely native experience, just like using the official YouTube app'
             };
-            let subTimer = null;
-            if (sub) sub.dataset.text = DEFAULT_SUB;
+            let subDebounce = null, subFallback = null, subPending = null;
+            function commitSub() {
+                if (subPending === null) return;
+                if (parseFloat(getComputedStyle(sub).opacity) > 0.05) return; // only swap once fully faded out
+                clearTimeout(subFallback);
+                sub.innerHTML = subPending;
+                subPending = null;
+                sub.style.opacity = '1';
+            }
+            if (sub) {
+                sub.dataset.text = DEFAULT_SUB;
+                sub.addEventListener('transitionend', function (e) { if (e.propertyName === 'opacity') commitSub(); });
+            }
             function setSubtext(idx) {
                 if (!sub) return;
                 const text = SUBTEXTS[idx] || DEFAULT_SUB;
-                if (sub.dataset.text === text) return;
-                sub.dataset.text = text;
-                sub.style.opacity = '0';
-                clearTimeout(subTimer);
-                subTimer = setTimeout(function () { sub.innerHTML = text; sub.style.opacity = '1'; }, 380);
+                if (sub.dataset.text === text && subPending === null) return;
+                clearTimeout(subDebounce);
+                subDebounce = setTimeout(function () {              // wait for the swipe to settle
+                    const t = SUBTEXTS[idx] || DEFAULT_SUB;
+                    if (sub.dataset.text === t && subPending === null) return;
+                    sub.dataset.text = t;
+                    subPending = t;
+                    if (parseFloat(getComputedStyle(sub).opacity) < 0.05) { commitSub(); }
+                    else { sub.style.opacity = '0'; clearTimeout(subFallback); subFallback = setTimeout(commitSub, 500); }
+                }, 160);
             }
 
             onFocusChange = function (idx) {
