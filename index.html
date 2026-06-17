@@ -680,7 +680,8 @@
                 function build() {
                     if (items.length) return;
                     const W = el.clientWidth, H = el.clientHeight, sc = sizeScale();
-                    for (let i = 0; i < count; i++) {
+                    const n = window.innerWidth <= 600 ? Math.max(8, Math.round(count * 0.4)) : count;
+                    for (let i = 0; i < n; i++) {
                         const d = document.createElement('div');
                         d.className = 'fi';
                         assign(d, i);
@@ -721,21 +722,23 @@
                         p.x += p.vx; p.y += p.vy; p.rot += p.vr;
                         p.r = p.size * 0.46;
                     }
-                    // 2) bounce off each other (separate + exchange velocity along normal)
-                    for (let i = 0; i < items.length; i++) {
-                        const a = items[i], ax = a.x + a.size / 2, ay = a.y + a.size / 2;
-                        for (let j = i + 1; j < items.length; j++) {
-                            const b = items[j];
-                            const nx = (b.x + b.size / 2) - ax, ny = (b.y + b.size / 2) - ay;
-                            const dist = Math.hypot(nx, ny), minD = a.r + b.r;
-                            if (dist > 0 && dist < minD) {
-                                const ux = nx / dist, uy = ny / dist, overlap = (minD - dist) / 2;
-                                a.x -= ux * overlap; a.y -= uy * overlap;
-                                b.x += ux * overlap; b.y += uy * overlap;
-                                const rel = (b.vx - a.vx) * ux + (b.vy - a.vy) * uy;
-                                if (rel < 0) {
-                                    a.vx += rel * ux; a.vy += rel * uy;
-                                    b.vx -= rel * ux; b.vy -= rel * uy;
+                    // 2) bounce off each other (separate + exchange velocity along normal) — skipped on phones for performance
+                    if (window.innerWidth > 600) {
+                        for (let i = 0; i < items.length; i++) {
+                            const a = items[i], ax = a.x + a.size / 2, ay = a.y + a.size / 2;
+                            for (let j = i + 1; j < items.length; j++) {
+                                const b = items[j];
+                                const nx = (b.x + b.size / 2) - ax, ny = (b.y + b.size / 2) - ay;
+                                const dist = Math.hypot(nx, ny), minD = a.r + b.r;
+                                if (dist > 0 && dist < minD) {
+                                    const ux = nx / dist, uy = ny / dist, overlap = (minD - dist) / 2;
+                                    a.x -= ux * overlap; a.y -= uy * overlap;
+                                    b.x += ux * overlap; b.y += uy * overlap;
+                                    const rel = (b.vx - a.vx) * ux + (b.vy - a.vy) * uy;
+                                    if (rel < 0) {
+                                        a.vx += rel * ux; a.vy += rel * uy;
+                                        b.vx -= rel * ux; b.vy -= rel * uy;
+                                    }
                                 }
                             }
                         }
