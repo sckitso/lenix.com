@@ -13,3 +13,6 @@
 
 # Bare /referral (no id) → still serves the page
 /referral        /referral.html           200
+
+# Tesla OAuth callback → serves the redirect page that bounces to myapp://callback
+/callback        /callback.html           200
