@@ -1,0 +1,18 @@
+# Netlify rewrites.
+# 200 = rewrite (URL stays clean in the browser bar).
+# 301 = redirect (browser sees the new URL).
+
+# Existing rule
+/privacypolicy   /index.html              200
+
+# Clean path-based referral link:
+#   https://lenixapp.com/referral/USER_abc123
+# becomes internally:
+#   /referral.html?ref=USER_abc123
+/referral/:id    /referral.html?ref=:id   200
+
+# Bare /referral (no id) → still serves the page
+/referral        /referral.html           200
+
+# Tesla OAuth callback → serves the redirect page that bounces to myapp://callback
+/callback        /callback.html           200
